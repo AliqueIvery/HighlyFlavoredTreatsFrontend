@@ -1,0 +1,117 @@
+<div class="checkout-layout">
+  <!-- LEFT: Form -->
+  <div class="checkout-form">
+    <h2>Checkout</h2>
+    <p class="sub">Complete your order details below.</p>
+
+    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+      <div class="delivery-toggle">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          [class.active]="deliveryType === 'delivery'"
+          (click)="changeDeliveryType('delivery')"
+        >
+          Local Delivery
+        </button>
+        <button
+          mat-raised-button
+          color="accent"
+          type="button"
+          [class.active]="deliveryType === 'shipping'"
+          (click)="changeDeliveryType('shipping')"
+        >
+          Shipping
+        </button>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="fill" class="full">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="fill" class="full">
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phone" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill" class="full">
+        <mat-label>Street Address</mat-label>
+        <input matInput formControlName="address" />
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>State</mat-label>
+          <input matInput formControlName="state" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Postal Code</mat-label>
+          <input matInput formControlName="postalCode" />
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" class="submit-btn">
+        Place Order
+      </button>
+    </form>
+
+    <div class="back-home">
+      <button mat-stroked-button color="accent" routerLink="/">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Home
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT: Cart Summary -->
+  <div class="checkout-summary" *ngIf="cart.getItems().length">
+    <h3>Order Summary</h3>
+    <div class="item" *ngFor="let item of cart.getItems()">
+    <img
+        [src]="item.product.imageUrl"
+        [alt]="item.product.name"
+        class="cart-thumb"
+    />
+    <div class="info">
+        <div class="name">{{ item.product.name }}</div>
+        <div class="meta">{{ item.quantity }} × {{ item.product.price | currency }}</div>
+    </div>
+    <div class="total">{{ item.product.price * item.quantity | currency }}</div>
+    </div>
+
+
+    <div class="summary-footer">
+      <div class="line">
+        <span>Subtotal</span>
+        <span>{{ cart.subtotal() | currency }}</span>
+      </div>
+      <p class="note">
+        Delivery or shipping fees calculated at fulfillment.
+      </p>
+    </div>
+  </div>
+</div>

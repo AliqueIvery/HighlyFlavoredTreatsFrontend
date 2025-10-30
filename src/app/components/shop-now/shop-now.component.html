@@ -1,74 +1,149 @@
-<div class="shop-layout">
-  <!-- LEFT: products -->
-  <div class="products">
-    <h2 class="page-title">Shop Now</h2>
-    <p class="page-sub">Pick your treats. Choose delivery or shipping at checkout.</p>
+<mat-sidenav-container class="shop-container">
+  <!-- 🛒 SIDE CART DRAWER -->
+  <mat-sidenav #cartDrawer position="end" mode="over" class="cart-drawer">
+    <h3 class="cart-title">Your Cart</h3>
 
-    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-    <p *ngIf="error" class="error">{{ error }}</p>
-
-    <!-- 🎯 New section: when no products exist -->
-    <div class="empty-products" *ngIf="!loading && !error && products.length === 0">
-      <mat-icon>sentiment_dissatisfied</mat-icon>
-      <h3>No products available</h3>
-      <p>We’re restocking our treats — check back soon! 🍪</p>
-      <button mat-raised-button color="accent" routerLink="/">Return Home</button>
-    </div>
-
-    <!-- Product grid -->
-    <div class="product-grid" *ngIf="!loading && products.length > 0">
-      <mat-card class="product-card" *ngFor="let p of products">
-        <div class="image-wrap">
-          <img mat-card-image [src]="p.imageUrl" [alt]="p.name" />
-        </div>
-        <mat-card-content>
-          <h3>{{ p.name }}</h3>
-          <p class="desc">{{ p.description }}</p>
-          <p class="price">{{ p.price | currency }}</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <div class="qty-box">
-            <button mat-mini-fab color="primary" (click)="dec(p)">-</button>
-            <span>{{ qtyMap[p.id] || 1 }}</span>
-            <button mat-mini-fab color="primary" (click)="inc(p)">+</button>
-          </div>
-          <button mat-raised-button color="accent" (click)="addToCart(p)">
-            Add to cart
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-  </div>
-
-  <!-- RIGHT: mini cart -->
-  <div class="cart-panel">
-    <h3 class="cart-title">
-      Cart
-      <span class="count" *ngIf="cartItems.length">{{ cartItems.length }}</span>
-    </h3>
     <div *ngIf="!cartItems.length" class="empty-cart">
-      Your cart is empty.
+      <mat-icon>shopping_bag</mat-icon>
+      <p>Your cart is empty.</p>
     </div>
+
     <div class="cart-items" *ngIf="cartItems.length">
       <div class="cart-item" *ngFor="let it of cartItems">
         <div class="info">
           <div class="name">{{ it.product.name }}</div>
-          <div class="meta">{{ it.quantity }} × {{ it.product.price | currency }}</div>
+          <div class="meta">
+            {{ it.quantity }} × {{ it.product.price | currency }}
+          </div>
         </div>
         <button mat-icon-button color="warn" (click)="removeItem(it.product.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
-    </div>
-    <div class="cart-footer" *ngIf="cartItems.length">
-      <div class="line">
-        <span>Subtotal</span>
-        <span>{{ subtotal | currency }}</span>
+
+      <div class="cart-summary">
+        <div class="line">
+          <span>Subtotal:</span>
+          <span>{{ subtotal | currency }}</span>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          routerLink="/checkout"
+          (click)="cartDrawer.close()"
+        >
+          Go to Checkout
+        </button>
       </div>
-      <p class="hint">Delivery / shipping is selected on checkout.</p>
-      <button mat-raised-button color="primary" routerLink="/checkout">
-        Checkout
-      </button>
     </div>
-  </div>
-</div>
+  </mat-sidenav>
+
+  <!-- 🌟 MAIN SHOP CONTENT -->
+  <mat-sidenav-content>
+    <div class="shop-layout">
+      <!-- LEFT: products -->
+      <div class="products">
+        <div class="back-home">
+        <button mat-stroked-button color="accent" routerLink="/">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Home
+        </button>
+        </div>
+        <!-- Logo -->
+        <div class="shop-logo">
+            <img src="../../../assets/images/logo.png" alt="Highly Flavored Treats Logo" />
+        </div>
+        <h2 class="page-title">Shop Now</h2>
+        <p class="page-sub">Pick your treats. Choose delivery or shipping at checkout.</p>
+
+        <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+        <p *ngIf="error" class="error">{{ error }}</p>
+
+        <!-- 🎯 New section: when no products exist -->
+        <div class="empty-products" *ngIf="!loading && !error && products.length === 0">
+          <mat-icon>sentiment_dissatisfied</mat-icon>
+          <h3>No products available</h3>
+          <p>We’re restocking our treats — check back soon! 🍪</p>
+          <button mat-raised-button color="accent" routerLink="/">Return Home</button>
+        </div>
+
+        <!-- Product grid -->
+        <div class="product-grid" *ngIf="!loading && products.length > 0">
+          <mat-card class="product-card" *ngFor="let p of products">
+            <div class="image-wrap">
+              <img mat-card-image [src]="p.imageUrl" [alt]="p.name" />
+            </div>
+            <mat-card-content>
+              <h3>{{ p.name }}</h3>
+              <p class="desc">{{ p.description }}</p>
+              <p class="price">{{ p.price | currency }}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <div class="qty-box">
+                <button mat-mini-fab color="primary" (click)="dec(p)">-</button>
+                <span>{{ qtyMap[p.id] || 1 }}</span>
+                <button mat-mini-fab color="primary" (click)="inc(p)">+</button>
+              </div>
+              <button mat-raised-button color="accent" (click)="addToCart(p)">
+                Add to cart
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- RIGHT: mini cart panel (desktop view) -->
+      <div class="cart-panel">
+        <h3 class="cart-title">
+          Cart
+          <span class="count" *ngIf="cartItems.length">{{ cartItems.length }}</span>
+        </h3>
+        <div *ngIf="!cartItems.length" class="empty-cart">Your cart is empty.</div>
+        <div class="cart-items" *ngIf="cartItems.length">
+          <div class="cart-item" *ngFor="let it of cartItems">
+            <!-- Product image -->
+            <img
+                [src]="it.product.imageUrl"
+                [alt]="it.product.name"
+                class="cart-thumb"
+            />
+
+            <!-- Info -->
+            <div class="info">
+                <div class="name">{{ it.product.name }}</div>
+                <div class="meta">{{ it.quantity }} × {{ it.product.price | currency }}</div>
+            </div>
+
+            <!-- Delete button -->
+            <button mat-icon-button color="warn" (click)="removeItem(it.product.id)">
+                <mat-icon>delete</mat-icon>
+            </button>
+            </div>
+        </div>
+        <div class="cart-footer" *ngIf="cartItems.length">
+          <div class="line">
+            <span>Subtotal</span>
+            <span>{{ subtotal | currency }}</span>
+          </div>
+          <p class="hint">Delivery / shipping is selected on checkout.</p>
+          <button mat-raised-button color="primary" routerLink="/checkout">
+            Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🛒 FLOATING CART BUTTON (mobile / quick view) -->
+    <button
+        mat-fab
+        color="accent"
+        class="floating-cart-btn"
+        [matBadge]="totalCartQty"
+        matBadgeColor="warn"
+        (click)="cartDrawer.toggle()"
+        aria-label="View Cart"
+        >
+        <mat-icon>shopping_cart</mat-icon>
+    </button>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -18,6 +18,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { DeliveryAreaComponent } from './components/delivery-area/delivery-area.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     HomePageComponent,
     ShopNowComponent,
     DeliveryAreaComponent,
-    ContactUsComponent
+    ContactUsComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +49,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSidenavModule,
+    MatBadgeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

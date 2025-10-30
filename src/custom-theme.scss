@@ -1,0 +1,155 @@
+@use '@angular/material' as mat;
+
+/* 1. Define palettes (neon) */
+$hft-primary: mat.define-palette(mat.$pink-palette, 500, 300, 700);  // neon pink
+$hft-accent:  mat.define-palette(mat.$indigo-palette, 500, 200, 700); // bright blue
+$hft-warn:    mat.define-palette(mat.$red-palette);
+
+/* 2. Dark theme config */
+$hft-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $hft-primary,
+    accent: $hft-accent,
+    warn: $hft-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
+/* 3. Apply to all Material components */
+@include mat.all-component-themes($hft-dark-theme);
+
+/* 4. Global body styling */
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #050509; /* deep dark to match logo */
+  color: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* optional scrollbars / links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* Toolbar */
+.hft-toolbar {
+  background: rgba(6, 6, 10, 0.65);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 20, 147, 0.35);
+  display: flex;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.logo {
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.9));
+}
+
+.title {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+/* Hero */
+.hero {
+  min-height: 70vh;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2.5rem;
+  padding: 3.5rem clamp(1rem, 4vw, 4rem);
+  background: radial-gradient(circle at top, rgba(255, 20, 147, 0.2), #050509 55%);
+  color: #fff;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero-content .sub {
+  max-width: 520px;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.75rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-image img {
+  max-width: 380px;
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 55px rgba(255, 20, 147, 0.3);
+}
+.hft-menu-overlay {
+  position: fixed !important;
+  top: 56px !important; /* adjust to your toolbar height */
+  right: 1rem !important;
+  z-index: 2000; /* above toolbar */
+}
+
+
+/* Responsive */
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+  .mobile-menu {
+    display: inline-flex;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+  .hero-image img {
+    max-width: 300px;
+  }
+}
+
+

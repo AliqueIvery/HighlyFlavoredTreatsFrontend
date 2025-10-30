@@ -1,0 +1,85 @@
+.contact-hero {
+  text-align: center;
+  padding: 3rem 1rem 1rem;
+  background: radial-gradient(circle at top, rgba(255, 20, 147, 0.2), rgba(5, 5, 9, 0.9) 60%);
+  color: #fff;
+}
+
+.contact-hero h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.contact-hero p {
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-form-section {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: rgba(7, 7, 12, 0.85);
+  border: 1px solid rgba(255, 20, 147, 0.15);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 25px 60px rgba(255, 20, 147, 0.2);
+  color: #fff;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
+mat-form-field {
+  color: #fff;
+}
+
+mat-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.submit-btn {
+  width: 100%;
+  font-weight: 600;
+  background: #ff1493;
+  box-shadow: 0 0 20px rgba(255, 20, 147, 0.3);
+  color: #fff;
+}
+
+.submit-btn:hover {
+  box-shadow: 0 0 25px rgba(255, 20, 147, 0.6);
+}
+
+.back-home {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.back-home button {
+  color: #fff;
+  border-color: #ff1493;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 10px rgba(255, 20, 147, 0.3);
+}
+
+.back-home button:hover {
+  background: rgba(255, 20, 147, 0.2);
+  box-shadow: 0 0 18px rgba(255, 20, 147, 0.6);
+}
+
+.back-home mat-icon {
+  margin-right: 0.4rem;
+  color: #ff1493;
+}
+
+@media (max-width: 600px) {
+  .contact-form-section {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}

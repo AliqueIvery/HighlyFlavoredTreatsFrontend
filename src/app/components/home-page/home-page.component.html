@@ -1,0 +1,46 @@
+<mat-toolbar color="primary" class="hft-toolbar">
+  <!-- Logo -->
+  <div class="brand" routerLink="/">
+    <img src="../../../assets/images/logo.png" alt="HFT Logo" class="logo" />
+    <span class="title">Highly Flavored Treats</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <!-- Desktop links -->
+  <nav class="nav-links">
+    <a mat-button routerLink="/">Home</a>
+    <a mat-button routerLink="/shop">Shop</a>
+    <a mat-button routerLink="/delivery">Delivery</a>
+    <a mat-stroked-button color="accent" routerLink="/contact">Contact</a>
+  </nav>
+
+  <!-- Mobile menu -->
+  <button mat-icon-button [matMenuTriggerFor]="menu" class="mobile-menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/">Home</button>
+    <button mat-menu-item routerLink="/shop">Shop</button>
+    <button mat-menu-item routerLink="/delivery">Delivery</button>
+    <button mat-menu-item routerLink="/contact">Contact</button>
+  </mat-menu>
+</mat-toolbar>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="eyebrow">Where “flavor” is everything</p>
+    <h1>Neon-fresh baked goods, delivered or shipped.</h1>
+    <p class="sub">
+      Order online, pick delivery (local) or shipping (out of town). Same backend for all your client sites.
+    </p>
+    <div class="actions">
+      <button mat-raised-button color="primary" routerLink="/shop">Shop now</button>
+      <button mat-stroked-button color="accent" routerLink="/delivery">View delivery areas</button>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=60" alt="Treats" />
+  </div>
+</section>

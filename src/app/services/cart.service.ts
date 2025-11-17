@@ -21,8 +21,8 @@ export class CartService {
     }
   }
 
-  remove(productId: number): void {
-    this.items = this.items.filter(i => i.product.id !== productId);
+  remove(id: string): void {
+    this.items = this.items.filter(i => i.product.id !== id);
   }
 
   clear(): void {
@@ -33,10 +33,12 @@ export class CartService {
     return this.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   }
 
+  // Total items in cart (count of distinct products)
   totalItems(): number {
-    return this.items.reduce((sum, item) => sum + item.quantity, 0);
+    return this.items.length;
   }
 
+  // Total quantity of all items (counting multiples)
   totalQuantity(): number {
     return this.items.reduce((sum, item) => sum + item.quantity, 0);
   }

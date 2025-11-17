@@ -21,6 +21,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { environment } from 'src/environments/environment';
+import { AuthModule, AuthHttpInterceptor  } from '@auth0/auth0-angular';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ProductsDashboardComponent } from './components/admin/products-dashboard/products-dashboard.component';
+import { ProductAddComponent } from './components/admin/product-add/product-add.component';
+import { ProductEditComponent } from './components/admin/product-edit/product-edit.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +37,11 @@ import { MatBadgeModule } from '@angular/material/badge';
     ShopNowComponent,
     DeliveryAreaComponent,
     ContactUsComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    NavbarComponent,
+    ProductsDashboardComponent,
+    ProductAddComponent,
+    ProductEditComponent
   ],
   imports: [
     BrowserModule,
@@ -51,9 +63,40 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatFormFieldModule,
     MatInputModule,
     MatSidenavModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatDividerModule,
+    AuthModule.forRoot({
+      domain: environment.auth0.domain,
+      clientId: environment.auth0.clientId,
+      authorizationParams: {
+        audience: environment.auth0.audience,
+        redirect_uri: window.location.origin
+      },
+      // 🔥 IMPORTANT: Store tokens in localStorage
+      cacheLocation: 'localstorage',
+      useRefreshTokens: true,               // Enables silent refresh
+      useRefreshTokensFallback: true,        // Fallback for older browsers
+      httpInterceptor: {
+        allowedList: [
+          {
+            uri: `${environment.apiBase}/api/*`,
+            // omit httpMethod to match all methods, or add separate entries per method
+            tokenOptions: {
+              authorizationParams: {
+                audience: environment.auth0.audience,
+                scope: 'openid profile email'
+              }
+            }
+          }
+        ]
+      }
+    })
   ],
-  providers: [],
+  providers: [{
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHttpInterceptor,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

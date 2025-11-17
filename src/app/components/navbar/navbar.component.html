@@ -1,0 +1,60 @@
+<mat-toolbar color="primary" class="hft-toolbar">
+  <!-- Logo -->
+  <div class="brand" routerLink="/">
+    <img src="/assets/images/logo.png" alt="HFT Logo" class="logo" />
+    <span class="title">Highly Flavored Treats</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <!-- Desktop links -->
+  <nav class="nav-links">
+    <a mat-button routerLink="/">Home</a>
+    <a mat-button routerLink="/shop">Shop</a>
+    <a mat-button routerLink="/delivery">Delivery</a>
+    <a mat-stroked-button color="accent" routerLink="/contact">Contact</a>
+  </nav>
+
+  <!-- Auth (desktop only; hidden on mobile via CSS .auth-desktop) -->
+  <div class="auth-row auth-desktop" *ngIf="auth.user$ | async as user; else loggedOut">
+    <button mat-button [matMenuTriggerFor]="userMenu">
+      <img *ngIf="user.picture" [src]="user.picture" alt="avatar" class="avatar" />
+      <span class="user-name">{{ user.name || user.email }}</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/admin/products">
+        <mat-icon>dashboard</mat-icon> Product Dashboard
+      </button>
+      <button mat-menu-item routerLink="/account"><mat-icon>account_circle</mat-icon> Account</button>
+      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Log out</button>
+    </mat-menu>
+  </div>
+  <ng-template #loggedOut>
+    <button class="auth-desktop" mat-raised-button color="accent" (click)="login()">Log in</button>
+  </ng-template>
+
+  <!-- Mobile menu trigger -->
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="mobile-menu">
+    <mat-icon>menu</mat-icon>
+    </button>
+
+    <!-- Mobile dropdown (opens ABOVE, and to the LEFT of the trigger if it's on the right edge) -->
+    <mat-menu #menu="matMenu" yPosition="above" xPosition="before">
+    <button mat-menu-item routerLink="/">Home</button>
+    <button mat-menu-item routerLink="/shop">Shop</button>
+    <button mat-menu-item routerLink="/delivery">Delivery</button>
+    <button mat-menu-item routerLink="/contact">Contact</button>
+    <mat-divider></mat-divider>
+    <ng-container *ngIf="auth.isAuthenticated$ | async; else mobileLoggedOut">
+        <button mat-menu-item routerLink="/admin/products">
+        <mat-icon>dashboard</mat-icon> Product Dashboard
+      </button>
+        <button mat-menu-item routerLink="/account"><mat-icon>account_circle</mat-icon> Account</button>
+        <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Log out</button>
+    </ng-container>
+    <ng-template #mobileLoggedOut>
+        <button mat-menu-item (click)="login()"><mat-icon>login</mat-icon> Log in</button>
+    </ng-template>
+    </mat-menu>
+</mat-toolbar>

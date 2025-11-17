@@ -1,0 +1,75 @@
+<div class="admin-page">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div>
+      <h1>Products</h1>
+      <p class="sub">
+        Manage the products for this tenant. Add, edit, or remove items from your storefront.
+      </p>
+    </div>
+
+    <button
+      mat-raised-button
+      color="accent"
+      routerLink="/admin/products/add">
+      <mat-icon>add</mat-icon>
+      Add Product
+    </button>
+  </div>
+
+  <!-- Loading / error states -->
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading">
+  </mat-progress-bar>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && !error && products.length === 0">
+    <mat-icon>inventory_2</mat-icon>
+    <h3>No products yet</h3>
+    <p>Add your first product to start selling.</p>
+    <button mat-raised-button color="accent" routerLink="/admin/products/add">
+      Add Product
+    </button>
+  </div>
+
+  <!-- Product grid -->
+  <div class="product-grid" *ngIf="!loading && products.length > 0">
+    <mat-card class="product-card" *ngFor="let p of products; trackBy: trackById">
+      <div class="image-wrap">
+        <img
+          [src]="p.imageUrl"
+          [alt]="p.name"
+          class="product-image"
+        />
+      </div>
+
+      <mat-card-content>
+        <h3 class="name">{{ p.name }}</h3>
+        <p class="desc">{{ p.description }}</p>
+        <p class="price">{{ p.price | currency }}</p>
+      </mat-card-content>
+
+      <mat-card-actions class="actions">
+        <button
+          mat-stroked-button
+          color="primary"
+          [routerLink]="['/admin/products', p.id, 'edit']">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+
+        <button
+          mat-stroked-button
+          color="warn"
+          (click)="deleteProduct(p)"
+          [disabled]="deletingId === p.id">
+          <mat-icon>delete</mat-icon>
+          {{ deletingId === p.id ? 'Deleting...' : 'Delete' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

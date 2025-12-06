@@ -1,0 +1,142 @@
+<section class="orders-page">
+  <!-- Header / actions -->
+  <header class="orders-header">
+    <div class="title-block">
+      <h2>Orders</h2>
+      <p>Review incoming orders, shipping type, and update status.</p>
+    </div>
+
+    <div class="header-actions">
+      <button mat-stroked-button color="primary" (click)="loadOrders()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <mat-progress-bar
+    *ngIf="loading"
+    mode="indeterminate"
+  ></mat-progress-bar>
+
+  <!-- Error -->
+  <div class="error-banner" *ngIf="error">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && !orders.length">
+    <mat-icon>inbox</mat-icon>
+    <h3>No orders yet</h3>
+    <p>Once customers place orders, they’ll show up here.</p>
+  </div>
+
+  <!-- Orders list -->
+  <div class="orders-card" *ngIf="orders.length">
+    <div class="orders-header-row">
+      <div class="col id-col">Order</div>
+      <div class="col customer-col">Customer</div>
+      <div class="col address-col">Address</div>
+      <div class="col shipping-col">Shipping Type</div>
+      <div class="col total-col">Total</div>
+      <div class="col date-col">Date</div>
+      <div class="col status-col">Status</div>
+    </div>
+
+    <div class="orders-row" *ngFor="let o of orders; trackBy: trackById">
+      <!-- ID + email -->
+      <div class="col id-col">
+        <div class="order-id">#{{ o.id }}</div>
+        <div class="email">{{ o.customerEmail }}</div>
+      </div>
+
+      <!-- Customer -->
+      <div class="col customer-col">
+        <div class="customer-name">{{ o.customerName }}</div>
+      </div>
+
+      <!-- Address -->
+      <div class="col address-col">
+        <div class="address-line">
+          {{ o.addressLine1 }}
+        </div>
+        <div class="address-line subtle">
+          {{ o.city }}, {{ o.state }} {{ o.postalCode }}
+        </div>
+      </div>
+
+      <!-- Shipping type / delivery vs shipping -->
+      <div class="col shipping-col">
+        <!-- If you have o.deliveryType: "delivery" | "shipping" -->
+        <!-- Shipping type column -->
+        <div class="col shipping-col">
+        <div
+            class="chip"
+            [ngClass]="o.deliveryEligible ? 'chip-delivery' : 'chip-shipping'"
+        >
+            <mat-icon>{{ o.deliveryEligible ? 'local_shipping' : 'local_post_office' }}</mat-icon>
+            <span>
+            {{ o.deliveryEligible ? 'Local Delivery' : 'Shipping Only' }}
+            </span>
+        </div>
+        </div>
+
+        <ng-template #shippingChip>
+          <div class="chip chip-shipping">
+            <mat-icon>local_post_office</mat-icon>
+            <span>Shipping</span>
+          </div>
+        </ng-template>
+
+        <!-- If instead you only have o.deliveryEligible:boolean and no deliveryType,
+             you could use this in place of the above:
+             <div class="chip" [ngClass]="o.deliveryEligible ? 'chip-delivery' : 'chip-shipping'">
+               <mat-icon>{{ o.deliveryEligible ? 'local_shipping' : 'local_post_office' }}</mat-icon>
+               <span>{{ o.deliveryEligible ? 'Local Delivery' : 'Shipping Only' }}</span>
+             </div>
+        -->
+      </div>
+
+      <!-- Total -->
+      <div class="col total-col">
+        <div class="total-amount">
+          {{ formatMoney(o.grandTotalCents) }}
+        </div>
+      </div>
+
+      <!-- Date -->
+      <div class="col date-col">
+        <div class="created-at">
+          {{ formatDate(o.createdAt) }}
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="col status-col">
+        <mat-form-field appearance="outline" class="status-field">
+          <mat-label>Status</mat-label>
+          <mat-select
+            [value]="o.status"
+            (selectionChange)="onStatusChange(o, $event.value)"
+            [disabled]="updating.has(o.id)"
+          >
+            <mat-option
+              *ngFor="let status of statusOptions"
+              [value]="status"
+            >
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-progress-bar
+          *ngIf="updating.has(o.id)"
+          mode="indeterminate"
+          class="row-progress"
+        ></mat-progress-bar>
+      </div>
+    </div>
+  </div>
+</section>

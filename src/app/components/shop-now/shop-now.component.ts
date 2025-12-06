@@ -1,3 +1,4 @@
+// src/app/components/shop-now/shop-now.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/common/product';
 import { CartService } from 'src/app/services/cart.service';
@@ -13,7 +14,7 @@ export class ShopNowComponent implements OnInit {
   loading = true;
   error = '';
 
-  // 🔥 keys are product.id (string), value is quantity
+  // 🔑 key is now string because id is a string
   qtyMap: Record<string, number> = {};
 
   constructor(
@@ -25,7 +26,6 @@ export class ShopNowComponent implements OnInit {
     this.productService.getAll().subscribe({
       next: (data) => {
         this.products = data;
-        // init qty for each product
         data.forEach(p => this.qtyMap[p.id] = 1);
         this.loading = false;
       },
@@ -58,12 +58,16 @@ export class ShopNowComponent implements OnInit {
     return this.cart.subtotal();
   }
 
-  // 🔥 id is now string
   removeItem(id: string) {
     this.cart.remove(id);
   }
 
   get totalCartQty() {
     return this.cart.totalQuantity();
+  }
+
+  // trackBy can just return the string id
+  trackById(index: number, p: Product): string {
+    return p.id;
   }
 }

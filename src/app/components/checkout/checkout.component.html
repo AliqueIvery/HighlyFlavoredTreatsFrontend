@@ -1,117 +1,174 @@
-<div class="checkout-layout">
-  <!-- LEFT: Form -->
-  <div class="checkout-form">
-    <h2>Checkout</h2>
-    <p class="sub">Complete your order details below.</p>
+<section class="checkout-page">
+  <h2>Checkout</h2>
 
-    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
-      <div class="delivery-toggle">
-        <button
-          mat-raised-button
-          color="primary"
-          type="button"
-          [class.active]="deliveryType === 'delivery'"
-          (click)="changeDeliveryType('delivery')"
-        >
-          Local Delivery
-        </button>
-        <button
-          mat-raised-button
-          color="accent"
-          type="button"
-          [class.active]="deliveryType === 'shipping'"
-          (click)="changeDeliveryType('shipping')"
-        >
-          Shipping
-        </button>
-      </div>
+  <form
+    [formGroup]="checkoutForm"
+    (ngSubmit)="onSubmit()"
+    class="checkout-form"
+  >
+    <!-- Customer Info -->
+    <div class="section-header">
+      <h3>Contact Information</h3>
+      <p>We’ll use this to send your order updates.</p>
+    </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="fill">
-          <mat-label>First Name</mat-label>
-          <input matInput formControlName="firstName" />
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-          <mat-label>Last Name</mat-label>
-          <input matInput formControlName="lastName" />
-        </mat-form-field>
-      </div>
-
-      <div class="form-row">
-        <mat-form-field appearance="fill" class="full">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" />
-        </mat-form-field>
-      </div>
-
-      <div class="form-row">
-        <mat-form-field appearance="fill" class="full">
-          <mat-label>Phone</mat-label>
-          <input matInput formControlName="phone" />
-        </mat-form-field>
-      </div>
-
-      <mat-form-field appearance="fill" class="full">
-        <mat-label>Street Address</mat-label>
-        <input matInput formControlName="address" />
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" />
+        <mat-error *ngIf="submitted && f['firstName'].invalid">
+          First name is required
+        </mat-error>
       </mat-form-field>
 
-      <div class="form-row">
-        <mat-form-field appearance="fill">
-          <mat-label>City</mat-label>
-          <input matInput formControlName="city" />
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" />
+        <mat-error *ngIf="submitted && f['lastName'].invalid">
+          Last name is required
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-        <mat-form-field appearance="fill">
-          <mat-label>State</mat-label>
-          <input matInput formControlName="state" />
-        </mat-form-field>
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+        <mat-error *ngIf="submitted && f['email'].invalid">
+          Please enter a valid email
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Postal Code</mat-label>
-          <input matInput formControlName="postalCode" />
-        </mat-form-field>
-      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Phone (optional)</mat-label>
+        <input matInput formControlName="phone" />
+      </mat-form-field>
+    </div>
 
-      <button mat-raised-button color="primary" type="submit" class="submit-btn">
-        Place Order
+    <!-- Delivery Type -->
+    <div class="section-header">
+      <h3>Delivery or Shipping</h3>
+      <p>Select how you want to receive your order.</p>
+    </div>
+
+    <div class="delivery-toggle">
+      <button
+        mat-stroked-button
+        type="button"
+        [color]="deliveryType === 'delivery' ? 'accent' : undefined"
+        (click)="changeDeliveryType('delivery')"
+      >
+        Local Delivery
       </button>
-    </form>
-
-    <div class="back-home">
-      <button mat-stroked-button color="accent" routerLink="/">
-        <mat-icon>arrow_back</mat-icon>
-        Back to Home
+      <button
+        mat-stroked-button
+        type="button"
+        [color]="deliveryType === 'shipping' ? 'accent' : undefined"
+        (click)="changeDeliveryType('shipping')"
+      >
+        Shipping
       </button>
     </div>
-  </div>
 
-  <!-- RIGHT: Cart Summary -->
-  <div class="checkout-summary" *ngIf="cart.getItems().length">
-    <h3>Order Summary</h3>
-    <div class="item" *ngFor="let item of cart.getItems()">
-    <img
-        [src]="item.product.imageUrl"
-        [alt]="item.product.name"
-        class="cart-thumb"
-    />
-    <div class="info">
-        <div class="name">{{ item.product.name }}</div>
-        <div class="meta">{{ item.quantity }} × {{ item.product.price | currency }}</div>
-    </div>
-    <div class="total">{{ item.product.price * item.quantity | currency }}</div>
+    <!-- Address -->
+    <div class="section-header">
+      <h3>Address</h3>
+      <p>We’ll deliver or ship to this location.</p>
     </div>
 
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Street Address</mat-label>
+      <input matInput formControlName="address" />
+      <mat-error *ngIf="submitted && f['address'].invalid">
+        Address is required
+      </mat-error>
+    </mat-form-field>
 
-    <div class="summary-footer">
-      <div class="line">
-        <span>Subtotal</span>
-        <span>{{ cart.subtotal() | currency }}</span>
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city" />
+        <mat-error *ngIf="submitted && f['city'].invalid">
+          City is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>State</mat-label>
+        <input matInput formControlName="state" />
+        <mat-error *ngIf="submitted && f['state'].invalid">
+          State is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Postal Code</mat-label>
+        <input matInput formControlName="postalCode" />
+        <mat-error *ngIf="submitted && f['postalCode'].invalid">
+          Postal code is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- 🧁 Your Order Summary -->
+    <div class="section-header">
+      <h3>Your Order</h3>
+      <p>Review your treats before paying.</p>
+    </div>
+
+    <div class="order-items" *ngIf="cart.getItems().length; else emptyCart">
+      <div class="order-item" *ngFor="let item of cart.getItems()">
+        <div class="thumb">
+          <img
+            [src]="item.product.imageUrl"
+            [alt]="item.product.name"
+          />
+        </div>
+        <div class="details">
+          <div class="name">{{ item.product.name }}</div>
+          <div class="meta">
+            Qty: {{ item.quantity }} ·
+            {{ item.product.price | currency }}
+          </div>
+        </div>
+        <div class="line-total">
+          {{ (item.product.price * item.quantity) | currency }}
+        </div>
       </div>
-      <p class="note">
-        Delivery or shipping fees calculated at fulfillment.
+    </div>
+
+    <ng-template #emptyCart>
+      <p class="empty-cart">
+        Your cart is empty. Please add items before checking out.
       </p>
+    </ng-template>
+
+    <!-- Payment -->
+    <div class="section-header">
+      <h3>Payment Details</h3>
+      <p>Enter your card information below to complete your order.</p>
     </div>
-  </div>
-</div>
+
+    <div #cardElement class="card-element"></div>
+
+    <!-- Messages -->
+    <div class="message error" *ngIf="error">{{ error }}</div>
+
+    <!-- Summary + Submit -->
+    <div class="summary-row">
+      <div class="total">
+        <span>Order Total:</span>
+        <strong>{{ cart.subtotal() | currency }}</strong>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="loading || !cart.getItems().length"
+      >
+        {{ loading ? 'Processing...' : 'Place Order & Pay' }}
+      </button>
+    </div>
+  </form>
+</section>

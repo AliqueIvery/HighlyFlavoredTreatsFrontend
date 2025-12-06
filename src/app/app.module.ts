@@ -9,11 +9,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 import { ShopNowComponent } from './components/shop-now/shop-now.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { DeliveryAreaComponent } from './components/delivery-area/delivery-area.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
@@ -29,6 +31,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ProductsDashboardComponent } from './components/admin/products-dashboard/products-dashboard.component';
 import { ProductAddComponent } from './components/admin/product-add/product-add.component';
 import { ProductEditComponent } from './components/admin/product-edit/product-edit.component';
+import { OrdersAdminComponent } from './components/admin/orders-admin/orders-admin.component';
+import { OrderSuccessDialogComponent } from './components/order-success-dialog/order-success-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +45,9 @@ import { ProductEditComponent } from './components/admin/product-edit/product-ed
     NavbarComponent,
     ProductsDashboardComponent,
     ProductAddComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    OrdersAdminComponent,
+    OrderSuccessDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +62,7 @@ import { ProductEditComponent } from './components/admin/product-edit/product-ed
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
+    MatDialogModule,
     MatInputModule,
     HttpClientModule,
     BrowserModule,
@@ -64,6 +71,7 @@ import { ProductEditComponent } from './components/admin/product-edit/product-ed
     MatInputModule,
     MatSidenavModule,
     MatBadgeModule,
+    MatSelectModule,
     MatDividerModule,
     AuthModule.forRoot({
       domain: environment.auth0.domain,
@@ -78,9 +86,53 @@ import { ProductEditComponent } from './components/admin/product-edit/product-ed
       useRefreshTokensFallback: true,        // Fallback for older browsers
       httpInterceptor: {
         allowedList: [
+          // 🔒 Admin product actions (require token)
           {
-            uri: `${environment.apiBase}/api/*`,
-            // omit httpMethod to match all methods, or add separate entries per method
+            uri: `${environment.apiBase}/api/products`, // create
+            httpMethod: 'POST',
+            tokenOptions: {
+              authorizationParams: {
+                audience: environment.auth0.audience,
+                scope: 'openid profile email'
+              }
+            }
+          },
+          {
+            uri: `${environment.apiBase}/api/products/*`, // update
+            httpMethod: 'PUT',
+            tokenOptions: {
+              authorizationParams: {
+                audience: environment.auth0.audience,
+                scope: 'openid profile email'
+              }
+            }
+          },
+          {
+            uri: `${environment.apiBase}/api/products/*`, // delete
+            httpMethod: 'DELETE',
+            tokenOptions: {
+              authorizationParams: {
+                audience: environment.auth0.audience,
+                scope: 'openid profile email'
+              }
+            }
+          },
+
+          // 🔒 Image uploads
+          {
+            uri: `${environment.apiBase}/api/uploads/*`,
+            // all methods here will include token
+            tokenOptions: {
+              authorizationParams: {
+                audience: environment.auth0.audience,
+                scope: 'openid profile email'
+              }
+            }
+          },
+
+          // 🔒 (Example) orders, if you want them protected
+          {
+            uri: `${environment.apiBase}/api/orders*`,
             tokenOptions: {
               authorizationParams: {
                 audience: environment.auth0.audience,

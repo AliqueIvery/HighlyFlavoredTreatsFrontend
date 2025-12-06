@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from 'src/app/common/product';
+import { slugify } from 'src/app/functions/slug.util';
 import {
   UpdateProductRequest,
   ProductService
@@ -39,12 +40,16 @@ export class ProductEditComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       price: [0, [Validators.required, Validators.min(0.01)]],
-      slug: [''],
+      slug: [{ value: '', disabled: true }],
       stock: [0, [Validators.min(0)]],
       imageKey: [''],
       description: ['']
     });
 
+    this.form.get('name')!.valueChanges.subscribe(name => {
+      const autoSlug = slugify(name || '');
+      this.form.patchValue({ slug: autoSlug }, { emitEvent: false });
+    });
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
@@ -63,9 +68,9 @@ export class ProductEditComponent implements OnInit {
         this.form.patchValue({
           name: product.name,
           price: product.price,
-          slug: (product as any).slug || '',
-          stock: (product as any).stock ?? 0,
-          imageKey: (product as any).imageKey || '',
+          slug: product.slug || '',
+          stock: product.stock ?? 0,
+          imageKey: product.imageKey || '',
           description: product.description || ''
         });
 
@@ -133,7 +138,8 @@ export class ProductEditComponent implements OnInit {
   }
 
   private updateProduct(): void {
-    const value = this.form.value;
+    // includes disabled fields like slug
+    const value = this.form.getRawValue();
 
     const payload: UpdateProductRequest = {
       title: value.name,
@@ -141,7 +147,8 @@ export class ProductEditComponent implements OnInit {
       slug: value.slug || null,
       currency: 'USD',
       imageKey: value.imageKey || (this.product as any)?.imageKey || null,
-      stock: value.stock ?? 0
+      stock: value.stock ?? 0,
+      description: value.description || null
     };
 
     this.productService.update(this.productId, payload).subscribe({

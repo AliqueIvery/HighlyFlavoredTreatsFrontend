@@ -10,7 +10,7 @@ export function mapApiProductToUi(api: ApiProduct): UiProduct {
   return {
     id: api.id,
     name: api.title,
-    description: api.slug || '', // use slug for now, until backend adds a description
+    description: api.description || '', // use slug for now, until backend adds a description
     price: api.priceCents / 100, // convert cents to dollars
     imageUrl: api.imageKey ? `${environment.S3_BASE_URL}${api.imageKey}` : ''
   };

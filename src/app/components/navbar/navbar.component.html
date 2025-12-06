@@ -22,14 +22,27 @@
       <span class="user-name">{{ user.name || user.email }}</span>
       <mat-icon>expand_more</mat-icon>
     </button>
+
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item routerLink="/admin/products">
-        <mat-icon>dashboard</mat-icon> Product Dashboard
+        <mat-icon>dashboard</mat-icon> Products
       </button>
-      <button mat-menu-item routerLink="/account"><mat-icon>account_circle</mat-icon> Account</button>
-      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Log out</button>
+
+      <!-- ⭐ NEW: Orders Admin Button -->
+      <button mat-menu-item routerLink="/admin/orders">
+        <mat-icon>receipt_long</mat-icon> Orders
+      </button>
+
+      <button mat-menu-item routerLink="/account">
+        <mat-icon>account_circle</mat-icon> Account
+      </button>
+
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon> Log out
+      </button>
     </mat-menu>
   </div>
+
   <ng-template #loggedOut>
     <button class="auth-desktop" mat-raised-button color="accent" (click)="login()">Log in</button>
   </ng-template>
@@ -47,11 +60,22 @@
     <button mat-menu-item routerLink="/contact">Contact</button>
     <mat-divider></mat-divider>
     <ng-container *ngIf="auth.isAuthenticated$ | async; else mobileLoggedOut">
-        <button mat-menu-item routerLink="/admin/products">
-        <mat-icon>dashboard</mat-icon> Product Dashboard
+      <button mat-menu-item routerLink="/admin/products">
+        <mat-icon>dashboard</mat-icon> Products
       </button>
-        <button mat-menu-item routerLink="/account"><mat-icon>account_circle</mat-icon> Account</button>
-        <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Log out</button>
+
+      <!-- ⭐ NEW: Orders Admin Button -->
+      <button mat-menu-item routerLink="/admin/orders">
+        <mat-icon>receipt_long</mat-icon> Orders
+      </button>
+
+      <button mat-menu-item routerLink="/account">
+        <mat-icon>account_circle</mat-icon> Account
+      </button>
+
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon> Log out
+      </button>
     </ng-container>
     <ng-template #mobileLoggedOut>
         <button mat-menu-item (click)="login()"><mat-icon>login</mat-icon> Log in</button>

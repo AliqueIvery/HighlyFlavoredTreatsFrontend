@@ -1,0 +1,52 @@
+.success-dialog {
+  padding: 1.5rem 1.75rem;
+  text-align: center;
+  max-width: 360px;
+}
+
+.icon-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.icon-wrap mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #4caf50;
+}
+
+h2 {
+  margin: 0 0 0.5rem;
+}
+
+.message {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+}
+
+.total {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.total span {
+  opacity: 0.8;
+  margin-right: 0.25rem;
+}
+
+.order-id {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.order-id span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+button {
+  margin-top: 0.25rem;
+  width: 100%;
+}

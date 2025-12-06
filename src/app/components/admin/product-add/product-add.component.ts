@@ -1,17 +1,21 @@
 // src/app/components/admin/product-add/product-add.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CreateProductRequest, ProductService } from 'src/app/services/product.service';
+import {
+  CreateProductRequest,
+  ProductService
+} from 'src/app/services/product.service';
 import { UploadService } from 'src/app/services/upload.service';
+import { slugify } from 'src/app/functions/slug.util';
 
 @Component({
   selector: 'app-product-add',
   templateUrl: './product-add.component.html',
   styleUrls: ['./product-add.component.css']
 })
-export class ProductAddComponent {
-  form: FormGroup;
+export class ProductAddComponent implements OnInit {
+  form!: FormGroup;
   saving = false;
   saveError: string | null = null;
 
@@ -24,14 +28,23 @@ export class ProductAddComponent {
     private productService: ProductService,
     private uploadService: UploadService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       price: [0, [Validators.required, Validators.min(0.01)]],
-      slug: [''],
+      // slug is auto-generated + disabled
+      slug: [{ value: '', disabled: true }],
       stock: [0, [Validators.min(0)]],
       imageKey: [''],
       description: ['']
+    });
+
+    // auto-generate slug from name
+    this.form.get('name')!.valueChanges.subscribe(name => {
+      const autoSlug = slugify(name || '');
+      this.form.patchValue({ slug: autoSlug }, { emitEvent: false });
     });
   }
 
@@ -90,7 +103,8 @@ export class ProductAddComponent {
   }
 
   private createProduct(): void {
-    const value = this.form.value;
+    // includes disabled fields like slug
+    const value = this.form.getRawValue();
 
     const payload: CreateProductRequest = {
       title: value.name,
@@ -98,7 +112,8 @@ export class ProductAddComponent {
       slug: value.slug || null,
       currency: 'USD',
       imageKey: value.imageKey || null,
-      stock: value.stock ?? 0
+      stock: value.stock ?? 0,
+      description: value.description || null
     };
 
     this.productService.create(payload).subscribe({

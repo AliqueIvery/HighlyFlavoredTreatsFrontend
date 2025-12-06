@@ -7,5 +7,6 @@ export interface ApiProduct {
   currency: string;      // e.g. "USD"
   imageKey: string | null; // S3 object key
   stock: number;         // available stock
-  createdAt: string;     // ISO string from backend
+  createdAt: string; 
+  description: string | null;    // ISO string from backend
 }

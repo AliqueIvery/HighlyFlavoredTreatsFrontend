@@ -1,0 +1,26 @@
+<div class="success-dialog">
+  <div class="icon-wrap">
+    <mat-icon>check_circle</mat-icon>
+  </div>
+
+  <h2>Order Placed Successfully!</h2>
+
+  <p class="message">
+    Thank you for ordering with Highly Flavored Treats. 💖
+    We’re already getting your treats ready.
+  </p>
+
+  <p class="total" *ngIf="data.total">
+    <span>Charged:</span>
+    <strong>{{ data.total | currency }}</strong>
+  </p>
+
+  <!-- Optional: show order id if you pass it -->
+  <p class="order-id" *ngIf="data.orderId">
+    Order ID: <span>#{{ data.orderId }}</span>
+  </p>
+
+  <button mat-raised-button color="primary" (click)="close()">
+    Close & Return Home
+  </button>
+</div>

@@ -13,6 +13,7 @@ export interface CreateProductRequest {
   currency?: string | null;
   imageKey?: string | null;
   stock?: number | null;
+  description: string | null;
 }
 
 export interface UpdateProductRequest extends CreateProductRequest {}

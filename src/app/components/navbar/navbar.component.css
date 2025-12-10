@@ -1,74 +1,74 @@
-/* NAVBAR */
-.hft-toolbar {
-  background: rgba(5, 5, 9, 0.85);
+/* NAVBAR BASE */
+.hft-navbar {
+  background: rgba(5, 5, 9, 0.9);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255, 20, 147, 0.35);
-  display: flex;
-  gap: 1rem;
+  z-index: 1030;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-  cursor: pointer;
-}
-
+/* Brand */
 .logo {
-  height: 42px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 10px rgba(255, 20, 147, .8));
+  height: 40px;
+  filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.8));
 }
 
-.title {
+.brand-text {
   font-weight: 600;
-  letter-spacing: .02em;
+  letter-spacing: 0.02em;
+  color: #fff;
 }
 
-.spacer { flex: 1 1 auto; }
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
+/* Links */
+.nav-link {
+  color: #fff !important;
+  opacity: 0.9;
 }
 
-.mobile-menu {
-  display: none;
+.nav-link:hover {
+  opacity: 1;
+  color: #ff1493 !important;
 }
 
-/* Avatar in auth dropdown */
+/* Avatar */
 .avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 0.5rem;
-  display: inline-block;
-  vertical-align: middle;
 }
 
-/* Optional: tighten auth button spacing on desktop */
-.auth-row button[mat-button] {
-  padding: 0 8px;
-  min-height: 40px;
+/* Buttons */
+.btn-pink {
+  background: #ff1493;
+  color: #fff;
+  border: none;
 }
 
-/* On smaller screens you can shrink further if you want */
-@media (max-width: 900px) {
-  .avatar {
-    width: 28px;
-    height: 28px;
-  }
+.btn-pink:hover {
+  background: #ff3da8;
 }
 
+.btn-outline-pink {
+  border: 1px solid #ff1493;
+  color: #ff1493;
+}
 
-.auth-desktop { display: inline-flex; align-items: center; }
-@media (max-width: 900px) { .auth-desktop { display: none; } }
+.btn-outline-pink:hover {
+  background: #ff1493;
+  color: #fff;
+}
 
+/* Dropdown */
+.dropdown-menu {
+  background: #0b0b14;
+  border: 1px solid rgba(255, 20, 147, 0.3);
+}
 
-/* RESPONSIVE (nav bits) */
-@media (max-width: 900px) {
-  .nav-links { display: none; }
-  .mobile-menu { display: inline-flex; }
+.dropdown-item {
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 20, 147, 0.15);
+  color: #ff1493;
 }

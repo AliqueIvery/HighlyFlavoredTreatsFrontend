@@ -157,8 +157,29 @@
     <!-- Summary + Submit -->
     <div class="summary-row">
       <div class="total">
-        <span>Order Total:</span>
-        <strong>{{ cart.subtotal() | currency }}</strong>
+        <span class="mode-pill">
+          {{ deliveryType === 'delivery' ? 'Local Delivery' : 'Shipping' }}
+        </span>
+
+        <div class="total-lines">
+          <div class="line">
+            <span>Subtotal</span>
+            <span>{{ cart.subtotal() | currency }}</span>
+          </div>
+          <div class="line">
+            <span>Processing fee</span>
+            <span>{{ processingFee | currency }}</span>
+          </div>
+          <div class="line grand">
+            <span>Total</span>
+            <strong>
+              {{
+                cart.subtotal() + processingFee
+                  | currency
+              }}
+            </strong>
+          </div>
+        </div>
       </div>
 
       <button

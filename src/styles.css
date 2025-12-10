@@ -2,3 +2,14 @@
 @import "leaflet/dist/leaflet.css";
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Make sure the page base doesn't fight the CDK overlays */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.app-content {
+  padding-top: 80px; /* adjust if navbar height changes */
+}
+

@@ -15,10 +15,7 @@
   </header>
 
   <!-- Loading -->
-  <mat-progress-bar
-    *ngIf="loading"
-    mode="indeterminate"
-  ></mat-progress-bar>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
   <!-- Error -->
   <div class="error-banner" *ngIf="error">
@@ -39,7 +36,7 @@
       <div class="col id-col">Order</div>
       <div class="col customer-col">Customer</div>
       <div class="col address-col">Address</div>
-      <div class="col shipping-col">Shipping Type</div>
+      <div class="col shipping-col">Fulfillment</div>
       <div class="col total-col">Total</div>
       <div class="col date-col">Date</div>
       <div class="col status-col">Status</div>
@@ -67,36 +64,35 @@
         </div>
       </div>
 
-      <!-- Shipping type / delivery vs shipping -->
+      <!-- Fulfillment / Shipping type -->
       <div class="col shipping-col">
-        <!-- If you have o.deliveryType: "delivery" | "shipping" -->
-        <!-- Shipping type column -->
-        <div class="col shipping-col">
         <div
-            class="chip"
-            [ngClass]="o.deliveryEligible ? 'chip-delivery' : 'chip-shipping'"
+          class="chip"
+          [ngClass]="
+            (o.deliveryType || '').toUpperCase() === 'DELIVERY'
+              ? 'chip-delivery'
+              : 'chip-shipping'
+          "
         >
-            <mat-icon>{{ o.deliveryEligible ? 'local_shipping' : 'local_post_office' }}</mat-icon>
-            <span>
-            {{ o.deliveryEligible ? 'Local Delivery' : 'Shipping Only' }}
-            </span>
-        </div>
+          <mat-icon>
+            {{
+              (o.deliveryType || '').toUpperCase() === 'DELIVERY'
+                ? 'local_shipping'
+                : 'local_post_office'
+            }}
+          </mat-icon>
+          <span>
+            {{
+              (o.deliveryType || '').toUpperCase() === 'DELIVERY'
+                ? 'Local Delivery'
+                : 'Shipping'
+            }}
+          </span>
         </div>
 
-        <ng-template #shippingChip>
-          <div class="chip chip-shipping">
-            <mat-icon>local_post_office</mat-icon>
-            <span>Shipping</span>
-          </div>
-        </ng-template>
-
-        <!-- If instead you only have o.deliveryEligible:boolean and no deliveryType,
-             you could use this in place of the above:
-             <div class="chip" [ngClass]="o.deliveryEligible ? 'chip-delivery' : 'chip-shipping'">
-               <mat-icon>{{ o.deliveryEligible ? 'local_shipping' : 'local_post_office' }}</mat-icon>
-               <span>{{ o.deliveryEligible ? 'Local Delivery' : 'Shipping Only' }}</span>
-             </div>
-        -->
+        <div class="fulfillment-note" *ngIf="o.deliveryEligible">
+          Eligible for local delivery
+        </div>
       </div>
 
       <!-- Total -->
@@ -122,10 +118,7 @@
             (selectionChange)="onStatusChange(o, $event.value)"
             [disabled]="updating.has(o.id)"
           >
-            <mat-option
-              *ngFor="let status of statusOptions"
-              [value]="status"
-            >
+            <mat-option *ngFor="let status of statusOptions" [value]="status">
               {{ status }}
             </mat-option>
           </mat-select>

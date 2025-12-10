@@ -9,7 +9,7 @@ export type OrderStatus =
 export interface Order {
   id: string;
   tenantId?: string;
-
+  deliveryType?: string | null;
   status: OrderStatus;
   deliveryEligible: boolean;
 
@@ -30,4 +30,6 @@ export interface Order {
   grandTotalCents: number;
 
   createdAt: string; // ISO datetime string
+
+  processingFeeCents?: number | null
 }

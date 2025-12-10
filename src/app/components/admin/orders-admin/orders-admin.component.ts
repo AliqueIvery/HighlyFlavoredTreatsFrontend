@@ -70,13 +70,6 @@ export class OrdersAdminComponent implements OnInit {
       });
   }
 
-  formatMoney(cents: number) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(cents / 100);
-  }
-
   formatDate(iso: string) {
     return new Date(iso).toLocaleString();
   }
@@ -84,4 +77,21 @@ export class OrdersAdminComponent implements OnInit {
   trackById(index: number, order: Order) {
     return order.id;
   }
+
+  formatMoney(cents: number | null | undefined): string {
+    if (cents == null) return '$0.00';
+    return (cents / 100).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
+  }
+
+  netToMerchant(o: Order): number {
+    const base =
+      (o.subtotalCents || 0) +
+      (o.shippingCents || 0) +
+      (o.taxCents || 0);
+    return base;
+  }
+
 }

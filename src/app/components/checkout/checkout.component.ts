@@ -15,6 +15,7 @@ import { CheckoutService } from 'src/app/services/checkout.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { OrderSuccessDialogComponent } from '../order-success-dialog/order-success-dialog.component';
+import { CartItem } from 'src/app/common/cart-item';
 
 @Component({
   selector: 'app-checkout',
@@ -34,7 +35,6 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
   loading = false;
   error: string | null = null;
-  success: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -94,7 +94,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     this.card = elements.create('card', {
       style: {
         base: {
-          color: '#ffffff',       // 🔥 card numbers, text, CVV
+          color: '#ffffff',       // card numbers, text, CVV
           iconColor: '#ffffff',
           fontSize: '16px',
           '::placeholder': {
@@ -109,8 +109,6 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     });
 
     this.card.mount(this.cardElement.nativeElement);
-
-    // Optional: log to confirm
     console.log('✅ Stripe Card Element mounted');
   }
 
@@ -123,10 +121,38 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     this.checkoutForm.patchValue({ deliveryType: type });
   }
 
+  // 🔹 Cart helpers for template
+  get cartItems(): CartItem[] {
+    return this.cart.getItems();
+  }
+
+  get subtotal(): number {
+    return this.cart.subtotal();
+  }
+
+  // 🔥 Same fee model as backend: Stripe 2.9% + $0.30 + 7% platform
+  get processingFee(): number {
+    if (!this.subtotal) return 0;
+
+    const STRIPE_PERCENT = 0.029;
+    const PLATFORM_PERCENT = 0.07;
+    const FIXED_FEE_CENTS = 30;
+
+    const S = Math.round(this.subtotal * 100); // subtotal in cents
+
+    const gross = (S + FIXED_FEE_CENTS) / (1 - STRIPE_PERCENT - PLATFORM_PERCENT);
+    const feeCents = Math.round(gross - S);
+
+    return feeCents / 100;
+  }
+
+  get totalWithFees(): number {
+    return this.subtotal + this.processingFee;
+  }
+
   async onSubmit(): Promise<void> {
     this.submitted = true;
     this.error = null;
-    this.success = null;
 
     if (this.checkoutForm.invalid) return;
     if (!this.stripe || !this.card) {
@@ -145,8 +171,6 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     try {
       const formValue = this.checkoutForm.value;
 
-      const totalCents = Math.round(this.cart.subtotal() * 100);
-
       const checkoutBody = {
         firstName: formValue.firstName,
         lastName: formValue.lastName,
@@ -160,18 +184,17 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         items: cartItems.map(ci => ({
           productId: ci.product.id,
           quantity: ci.quantity
-        })),
-        amountCents: totalCents
+        }))
+        // ❌ No amountCents here – backend recomputes from DB and applies fees
       };
-
 
       const res = await firstValueFrom(
         this.checkoutService.createPaymentIntent(checkoutBody)
       );
 
       const clientSecret = res?.clientSecret;
-      const orderId = res?.orderId;
-      console.log(orderId);
+      const orderId = (res as any)?.orderId;
+      console.log('Created order:', orderId);
 
       if (!clientSecret) {
         this.error = 'Backend returned no client secret.';
@@ -197,9 +220,8 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         console.error(error);
         this.error = error.message || 'Payment failed.';
       } else if (paymentIntent?.status === 'succeeded') {
-        // Grab total *before* clearing for display
-        const finalTotal = this.cart.subtotal();
-        const orderId = (res as any)?.orderId; // if backend returns it
+        // Use totalWithFees to show what customer actually paid
+        const finalTotal = this.totalWithFees;
 
         // Clear cart + reset form
         this.cart.clear();
@@ -219,8 +241,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         dialogRef.afterClosed().subscribe(() => {
           this.router.navigate(['/']);
         });
-      }
- else {
+      } else {
         this.error = 'Payment status unknown. Please contact us.';
       }
     } catch (err) {

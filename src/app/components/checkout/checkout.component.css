@@ -187,6 +187,58 @@
   margin-bottom: 1rem;
 }
 
+/* Container */
+.total-lines {
+  background: #ffffff0d; /* subtle white tint over dark bg */
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  border: 1px solid #ffffff22;
+  backdrop-filter: blur(4px);
+}
+
+/* Each line */
+.line {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 15px;
+  color: #f1f1f1;
+}
+
+/* Subtle dividing lines between rows */
+.line:not(:last-child) {
+  border-bottom: 1px solid #ffffff1a;
+}
+
+/* Labels on the left */
+.line span:first-child {
+  font-weight: 500;
+}
+
+/* Amounts */
+.line span:last-child {
+  font-weight: 600;
+}
+
+/* Total (grand total) */
+.line.grand {
+  padding-top: 14px;
+  font-size: 18px;
+}
+
+.line.grand span {
+  font-weight: 700 !important;
+  color: #ffffff;
+}
+
+.line.grand strong {
+  font-size: 20px;
+  color: #ffcc66; /* nice highlighted gold-ish total */
+  font-weight: 800;
+}
+
+
 /* Responsive */
 @media (max-width: 600px) {
   .checkout-page {

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBase: 'http://localhost:8080',
+  apiBase: 'http://localhost:5000',
   auth0: {
     domain: 'https://dev-wgp6ws7mkemmiqa4.us.auth0.com',
     clientId: 'Z9B6osoWkDGT6N4snNJzmQHucmFNG1Zf',

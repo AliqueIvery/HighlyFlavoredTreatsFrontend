@@ -1,84 +1,92 @@
-<mat-toolbar color="primary" class="hft-toolbar">
-  <!-- Logo -->
-  <div class="brand" routerLink="/">
-    <img src="/assets/images/logo.png" alt="HFT Logo" class="logo" />
-    <span class="title">Highly Flavored Treats</span>
-  </div>
+<nav class="navbar navbar-expand-lg navbar-dark hft-navbar fixed-top">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <img
+        src="/assets/images/logo.png"
+        alt="HFT Logo"
+        class="logo me-2"
+      />
+      <span class="brand-text">Highly Flavored Treats</span>
+    </a>
 
-  <span class="spacer"></span>
-
-  <!-- Desktop links -->
-  <nav class="nav-links">
-    <a mat-button routerLink="/">Home</a>
-    <a mat-button routerLink="/shop">Shop</a>
-    <a mat-button routerLink="/delivery">Delivery</a>
-    <a mat-stroked-button color="accent" routerLink="/contact">Contact</a>
-  </nav>
-
-  <!-- Auth (desktop only; hidden on mobile via CSS .auth-desktop) -->
-  <div class="auth-row auth-desktop" *ngIf="auth.user$ | async as user; else loggedOut">
-    <button mat-button [matMenuTriggerFor]="userMenu">
-      <img *ngIf="user.picture" [src]="user.picture" alt="avatar" class="avatar" />
-      <span class="user-name">{{ user.name || user.email }}</span>
-      <mat-icon>expand_more</mat-icon>
+    <!-- Mobile toggle -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#hftNavbar"
+      aria-controls="hftNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
     </button>
 
-    <mat-menu #userMenu="matMenu">
-      <button mat-menu-item routerLink="/admin/products">
-        <mat-icon>dashboard</mat-icon> Products
-      </button>
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="hftNavbar">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/shop">Shop</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/delivery">Delivery</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-pink ms-lg-2" routerLink="/contact">
+            Contact
+          </a>
+        </li>
 
-      <!-- ⭐ NEW: Orders Admin Button -->
-      <button mat-menu-item routerLink="/admin/orders">
-        <mat-icon>receipt_long</mat-icon> Orders
-      </button>
+        <!-- Auth -->
+        <ng-container *ngIf="auth.user$ | async as user; else loggedOut">
+          <li class="nav-item dropdown ms-lg-3">
+            <a
+              class="nav-link dropdown-toggle d-flex align-items-center"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                *ngIf="user.picture"
+                [src]="user.picture"
+                class="avatar me-2"
+                alt="avatar"
+              />
+              <span>{{ user.name || user.email }}</span>
+            </a>
 
-      <button mat-menu-item routerLink="/account">
-        <mat-icon>account_circle</mat-icon> Account
-      </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" routerLink="/admin/products">
+                  Products
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/admin/orders">
+                  Orders
+                </a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <button class="dropdown-item text-danger" (click)="logout()">
+                  Log out
+                </button>
+              </li>
+            </ul>
+          </li>
+        </ng-container>
 
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon> Log out
-      </button>
-    </mat-menu>
+        <ng-template #loggedOut>
+          <li class="nav-item ms-lg-3">
+            <button class="btn btn-pink" (click)="login()">Log in</button>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
   </div>
-
-  <ng-template #loggedOut>
-    <button class="auth-desktop" mat-raised-button color="accent" (click)="login()">Log in</button>
-  </ng-template>
-
-  <!-- Mobile menu trigger -->
-    <button mat-icon-button [matMenuTriggerFor]="menu" class="mobile-menu">
-    <mat-icon>menu</mat-icon>
-    </button>
-
-    <!-- Mobile dropdown (opens ABOVE, and to the LEFT of the trigger if it's on the right edge) -->
-    <mat-menu #menu="matMenu" yPosition="above" xPosition="before">
-    <button mat-menu-item routerLink="/">Home</button>
-    <button mat-menu-item routerLink="/shop">Shop</button>
-    <button mat-menu-item routerLink="/delivery">Delivery</button>
-    <button mat-menu-item routerLink="/contact">Contact</button>
-    <mat-divider></mat-divider>
-    <ng-container *ngIf="auth.isAuthenticated$ | async; else mobileLoggedOut">
-      <button mat-menu-item routerLink="/admin/products">
-        <mat-icon>dashboard</mat-icon> Products
-      </button>
-
-      <!-- ⭐ NEW: Orders Admin Button -->
-      <button mat-menu-item routerLink="/admin/orders">
-        <mat-icon>receipt_long</mat-icon> Orders
-      </button>
-
-      <button mat-menu-item routerLink="/account">
-        <mat-icon>account_circle</mat-icon> Account
-      </button>
-
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon> Log out
-      </button>
-    </ng-container>
-    <ng-template #mobileLoggedOut>
-        <button mat-menu-item (click)="login()"><mat-icon>login</mat-icon> Log in</button>
-    </ng-template>
-    </mat-menu>
-</mat-toolbar>
+</nav>

@@ -33,6 +33,7 @@ import { ProductAddComponent } from './components/admin/product-add/product-add.
 import { ProductEditComponent } from './components/admin/product-edit/product-edit.component';
 import { OrdersAdminComponent } from './components/admin/orders-admin/orders-admin.component';
 import { OrderSuccessDialogComponent } from './components/order-success-dialog/order-success-dialog.component';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { OrderSuccessDialogComponent } from './components/order-success-dialog/o
     ProductAddComponent,
     ProductEditComponent,
     OrdersAdminComponent,
-    OrderSuccessDialogComponent
+    OrderSuccessDialogComponent,
+    AuthCallbackComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +80,7 @@ import { OrderSuccessDialogComponent } from './components/order-success-dialog/o
       clientId: environment.auth0.clientId,
       authorizationParams: {
         audience: environment.auth0.audience,
-        redirect_uri: window.location.origin
+        redirect_uri: `${window.location.origin}/auth/callback`
       },
       // 🔥 IMPORTANT: Store tokens in localStorage
       cacheLocation: 'localstorage',

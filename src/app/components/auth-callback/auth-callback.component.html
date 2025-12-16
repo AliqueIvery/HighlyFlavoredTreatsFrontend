@@ -1,0 +1,5 @@
+<div class="p-4 text-center">
+    <h2>Signing you in…</h2>
+    <p *ngIf="error" class="text-danger">{{ error }}</p>
+    <button *ngIf="error" class="btn btn-pink" (click)="retry()">Try again</button>
+</div>

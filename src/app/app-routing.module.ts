@@ -10,6 +10,7 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { ProductAddComponent } from './components/admin/product-add/product-add.component';
 import { ProductEditComponent } from './components/admin/product-edit/product-edit.component';
 import { OrdersAdminComponent } from './components/admin/orders-admin/orders-admin.component';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 
 const routes: Routes = [
   {path:'home', component:HomePageComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: 'admin/products/:id/edit',component: ProductEditComponent,canActivate: [AuthGuard]},
   { path: 'admin/orders', component: OrdersAdminComponent, canActivate: [AuthGuard]},
   { path: 'contact', component: ContactUsComponent },
+  { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'checkout', component: CheckoutComponent },
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', redirectTo: '/home', pathMatch: 'full'}

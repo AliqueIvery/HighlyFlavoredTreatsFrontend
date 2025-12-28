@@ -1,0 +1,71 @@
+<div class="page" style="padding:24px; max-width: 720px;">
+  <h2>Payments</h2>
+  <p style="opacity:.8; margin-top:-8px;">
+    Connect Stripe so this store can accept card payments.
+  </p>
+
+  <mat-card *ngIf="loading">
+    <mat-card-content>Loading…</mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="!loading">
+    <mat-card-content>
+
+      <div *ngIf="error" style="margin-bottom:12px;">
+        <mat-chip color="warn" selected>{{ error }}</mat-chip>
+      </div>
+
+      <div style="display:flex; gap:12px; align-items:center; margin-bottom: 12px;">
+        <mat-chip color="primary" selected *ngIf="settings?.stripeAccountId">
+          Connected Account Saved
+        </mat-chip>
+
+        <mat-chip color="accent" selected *ngIf="readyToAcceptPayments">
+          Ready to accept payments
+        </mat-chip>
+
+        <mat-chip color="warn" selected *ngIf="settings?.stripeAccountId && !readyToAcceptPayments">
+          Needs additional setup
+        </mat-chip>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="save()">
+
+        <mat-form-field appearance="outline" style="width:100%;">
+          <mat-label>Stripe Connected Account ID</mat-label>
+          <input matInput formControlName="stripeAccountId" placeholder="acct_123..." />
+          <mat-hint>Example: acct_1SdZASF72X71dEbU</mat-hint>
+
+          <mat-error *ngIf="form.controls.stripeAccountId.hasError('required')">
+            Stripe account id is required.
+          </mat-error>
+
+          <mat-error *ngIf="form.controls.stripeAccountId.hasError('pattern')">
+            Must start with <b>acct_</b>
+          </mat-error>
+        </mat-form-field>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:12px;">
+          <button mat-stroked-button type="button" (click)="refresh()" [disabled]="saving">
+            Refresh
+          </button>
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="saving">
+            {{ saving ? 'Saving…' : 'Save' }}
+          </button>
+        </div>
+      </form>
+
+      <mat-divider style="margin:16px 0;"></mat-divider>
+
+      <div style="font-size: 13px; opacity:.8;">
+        <div><b>Tenant:</b> {{ settings?.tenantId || '—' }}</div>
+        <div><b>Last updated:</b> {{ settings?.updatedAt || '—' }}</div>
+        <div><b>chargesEnabled:</b> {{ settings?.chargesEnabled ?? '—' }}</div>
+        <div><b>detailsSubmitted:</b> {{ settings?.detailsSubmitted ?? '—' }}</div>
+        <div><b>payoutsEnabled:</b> {{ settings?.payoutsEnabled ?? '—' }}</div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -11,6 +11,8 @@ import { ProductAddComponent } from './components/admin/product-add/product-add.
 import { ProductEditComponent } from './components/admin/product-edit/product-edit.component';
 import { OrdersAdminComponent } from './components/admin/orders-admin/orders-admin.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { TenantEmailSettingsComponent } from './components/admin/tenant-email-settings/tenant-email-settings.component';
+import { PaymentsSettingsComponent } from './components/admin/payments-settings/payments-settings.component';
 
 const routes: Routes = [
   {path:'home', component:HomePageComponent},
@@ -22,6 +24,8 @@ const routes: Routes = [
   { path: 'admin/orders', component: OrdersAdminComponent, canActivate: [AuthGuard]},
   { path: 'contact', component: ContactUsComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
+  { path: 'admin/settings/email', component: TenantEmailSettingsComponent, canActivate: [AuthGuard]},
+  { path: 'admin/settings/payments', component: PaymentsSettingsComponent , canActivate: [AuthGuard]},
   { path: 'checkout', component: CheckoutComponent },
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', redirectTo: '/home', pathMatch: 'full'}

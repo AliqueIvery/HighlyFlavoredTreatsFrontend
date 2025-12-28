@@ -1,0 +1,83 @@
+<section class="page">
+  <header class="head">
+    <div>
+      <h2>Email Settings</h2>
+      <p>Verify your domain so order confirmations can be sent from your business email.</p>
+    </div>
+
+    <button class="btn btn-outline-light" type="button" (click)="load()" [disabled]="loading">
+      Refresh
+    </button>
+  </header>
+
+  <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+  <div class="card-panel">
+    <h3>Sender (From) Address</h3>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="form">
+      <div class="row">
+        <div class="col">
+          <label class="form-label">From Name</label>
+          <input class="form-control" formControlName="fromName" placeholder="Highly Flavored Treats" />
+        </div>
+
+        <div class="col">
+          <label class="form-label">From Email</label>
+          <input class="form-control" formControlName="fromEmail" placeholder="orders@highlyflavoredtreats.com" />
+          <div class="small text-danger" *ngIf="form.get('fromEmail')?.touched && form.get('fromEmail')?.invalid">
+            Enter a valid email.
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-pink" type="submit" [disabled]="saving">
+          {{ saving ? 'Saving...' : 'Save & Generate DNS Records' }}
+        </button>
+
+        <span class="status" *ngIf="settings">
+          Status:
+          <span class="badge" [class.ok]="settings.status==='VERIFIED'" [class.pending]="settings.status==='PENDING'">
+            {{ statusLabel(settings.status) }}
+          </span>
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <div class="card-panel" *ngIf="settings">
+    <div class="dns-head">
+      <div>
+        <h3>Domain Verification (DNS Records)</h3>
+        <p>Add these records in your DNS provider (GoDaddy / Route53). Then click Verify.</p>
+      </div>
+
+      <button class="btn btn-outline-pink" type="button" (click)="verify()" [disabled]="verifying">
+        {{ verifying ? 'Verifying...' : 'Verify Now' }}
+      </button>
+    </div>
+
+    <div class="dns-grid" *ngIf="settings.dnsRecords.length; else noDns">
+      <div class="dns-row dns-header">
+        <div>Type</div>
+        <div>Name</div>
+        <div>Value</div>
+      </div>
+
+      <div class="dns-row" *ngFor="let r of settings.dnsRecords">
+        <div class="mono">{{ r.type }}</div>
+        <div class="mono">{{ r.name }}</div>
+        <div class="mono value">{{ r.value }}</div>
+      </div>
+    </div>
+
+    <ng-template #noDns>
+      <p class="muted">No DNS records yet. Save a From Email first.</p>
+    </ng-template>
+
+    <div class="note">
+      Tip: DNS can take 5–30 minutes (sometimes longer). Keep verifying until it flips to “Verified”.
+    </div>
+  </div>
+</section>

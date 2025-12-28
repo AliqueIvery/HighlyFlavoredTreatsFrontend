@@ -1,0 +1,119 @@
+.page{
+  max-width: 1000px;
+  margin: 90px auto 40px;
+  padding: 0 16px;
+  color: #fff;
+}
+
+.head{
+  display:flex;
+  justify-content: space-between;
+  align-items:flex-end;
+  gap:16px;
+  margin-bottom: 16px;
+}
+
+.head h2{ margin:0; font-weight:700; }
+.head p{ margin:6px 0 0; opacity:.85; }
+
+.card-panel{
+  background: rgba(5, 5, 9, 0.75);
+  border: 1px solid rgba(255, 20, 147, 0.25);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 12px 26px rgba(0,0,0,.25);
+  margin-top: 14px;
+}
+
+.card-panel h3{
+  margin:0 0 12px;
+  font-size: 1.05rem;
+}
+
+.form .row{
+  display:flex;
+  gap: 12px;
+}
+
+.form .col{ flex: 1; min-width: 240px; }
+
+.actions{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.status{ opacity: .9; }
+
+.badge{
+  display:inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-left: 8px;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+.badge.ok{ background: rgba(0, 200, 83, 0.18); }
+.badge.pending{ background: rgba(255, 193, 7, 0.18); }
+
+.btn-pink{
+  background: #ff1493;
+  border: 0;
+  color: #fff;
+}
+
+.btn-outline-pink{
+  border: 1px solid rgba(255, 20, 147, 0.7);
+  color: #ff8fd0;
+  background: transparent;
+}
+
+.dns-head{
+  display:flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.dns-head p{ margin: 6px 0 0; opacity:.85; }
+
+.dns-grid{
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dns-row{
+  display:grid;
+  grid-template-columns: 90px 1.2fr 2fr;
+  gap: 12px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.dns-header{
+  border-top: 0;
+  background: rgba(255,255,255,.04);
+  font-weight: 700;
+}
+
+.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+.value{ word-break: break-all; opacity: .95; }
+
+.note{
+  margin-top: 10px;
+  opacity: .85;
+  font-size: .92rem;
+}
+
+.muted{ opacity: .75; }
+
+@media (max-width: 900px){
+  .form .row{ flex-direction: column; }
+  .dns-row{ grid-template-columns: 90px 1fr; }
+  .dns-row .value{ grid-column: 1 / -1; }
+}

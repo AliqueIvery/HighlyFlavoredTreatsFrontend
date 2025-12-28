@@ -23,6 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatChipsModule } from '@angular/material/chips';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { environment } from 'src/environments/environment';
@@ -34,6 +35,8 @@ import { ProductEditComponent } from './components/admin/product-edit/product-ed
 import { OrdersAdminComponent } from './components/admin/orders-admin/orders-admin.component';
 import { OrderSuccessDialogComponent } from './components/order-success-dialog/order-success-dialog.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { TenantEmailSettingsComponent } from './components/admin/tenant-email-settings/tenant-email-settings.component';
+import { PaymentsSettingsComponent } from './components/admin/payments-settings/payments-settings.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +52,9 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
     ProductEditComponent,
     OrdersAdminComponent,
     OrderSuccessDialogComponent,
-    AuthCallbackComponent
+    AuthCallbackComponent,
+    TenantEmailSettingsComponent,
+    PaymentsSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +80,7 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
     MatBadgeModule,
     MatSelectModule,
     MatDividerModule,
+    MatChipsModule,
     AuthModule.forRoot({
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
@@ -135,6 +141,15 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
           // 🔒 (Example) orders, if you want them protected
           {
             uri: `${environment.apiBase}/api/orders*`,
+            tokenOptions: {
+              authorizationParams: {
+                audience: environment.auth0.audience,
+                scope: 'openid profile email'
+              }
+            }
+          },
+          {
+            uri: `${environment.apiBase}/api/admin/*`,
             tokenOptions: {
               authorizationParams: {
                 audience: environment.auth0.audience,

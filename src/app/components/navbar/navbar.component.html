@@ -61,6 +61,7 @@
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end">
+              <!-- Admin -->
               <li>
                 <a class="dropdown-item" routerLink="/admin/products">
                   Products
@@ -71,7 +72,26 @@
                   Orders
                 </a>
               </li>
+
               <li><hr class="dropdown-divider" /></li>
+
+              <!-- Settings -->
+              <li>
+                <a class="dropdown-item" routerLink="/admin/settings/email">
+                  Email Settings
+                </a>
+              </li>
+
+              <!-- ✅ NEW: Payments Settings -->
+              <li>
+                <a class="dropdown-item" routerLink="/admin/settings/payments">
+                  Payments
+                </a>
+              </li>
+
+              <li><hr class="dropdown-divider" /></li>
+
+              <!-- Auth -->
               <li>
                 <button class="dropdown-item text-danger" (click)="logout()">
                   Log out

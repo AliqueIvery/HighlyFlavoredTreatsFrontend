@@ -111,19 +111,30 @@
 
       <!-- Status -->
       <div class="col status-col">
-        <mat-form-field appearance="outline" class="status-field">
-          <mat-label>Status</mat-label>
-          <mat-select
-            [value]="o.status"
-            (selectionChange)="onStatusChange(o, $event.value)"
+        <div class="dropdown status-dropdown">
+          <button
+            class="btn btn-sm btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            data-bs-display="static"
+            aria-expanded="false"
             [disabled]="updating.has(o.id)"
           >
-            <mat-option *ngFor="let status of statusOptions" [value]="status">
-              {{ status }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            {{ o.status }}
+          </button>
 
+          <ul class="dropdown-menu">
+            <li *ngFor="let status of statusOptions">
+              <button
+                class="dropdown-item"
+                [class.active]="status === o.status"
+                (click)="onStatusChange(o, status)"
+              >
+                {{ status }}
+              </button>
+            </li>
+          </ul>
+        </div>
         <mat-progress-bar
           *ngIf="updating.has(o.id)"
           mode="indeterminate"

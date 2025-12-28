@@ -181,6 +181,19 @@
   margin-top: 0.35rem;
 }
 
+.orders-card,
+.orders-row {
+  overflow: visible !important;
+}
+.status-dropdown {
+  position: relative;
+}
+.status-dropdown .btn {
+  min-width: 120px;
+  text-align: left;
+}
+
+
 /* Responsive: stack on narrow screens */
 @media (max-width: 900px) {
   .orders-header {

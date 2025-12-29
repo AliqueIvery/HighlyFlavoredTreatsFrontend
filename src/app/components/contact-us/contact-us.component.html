@@ -1,3 +1,5 @@
+<!-- contact-us.component.html (FULL DROP-IN) -->
+
 <section class="contact-hero">
   <h1>Contact Us</h1>
   <p>Got a question about an order or custom treat? We’d love to hear from you!</p>
@@ -5,6 +7,18 @@
 
 <section class="contact-form-section">
   <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- Success / Error banners -->
+    <div class="msg-banner error" *ngIf="error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+
+    <div class="msg-banner success" *ngIf="success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ success }}</span>
+    </div>
+
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Your Name</mat-label>
       <input matInput formControlName="name" placeholder="e.g. Jane Doe" />
@@ -36,15 +50,25 @@
       <mat-error *ngIf="submitted && f['message'].errors?.['minlength']">Minimum 10 characters</mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" class="submit-btn">
-      Send Message
+    <!-- Submit -->
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      class="submit-btn"
+      [disabled]="sending"
+    >
+      {{ sending ? 'Sending...' : 'Send Message' }}
     </button>
+
+    <!-- Optional progress indicator -->
+    <mat-progress-bar *ngIf="sending" mode="indeterminate" style="margin-top: 12px;"></mat-progress-bar>
   </form>
 </section>
+
 <section class="back-home">
   <button mat-stroked-button color="accent" routerLink="/">
     <mat-icon>arrow_back</mat-icon>
     Back to Home
   </button>
 </section>
-

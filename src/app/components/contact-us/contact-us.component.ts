@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
+import { ContactUsService } from 'src/app/services/contact-us.service';
 
 @Component({
   selector: 'app-contact-us',
@@ -10,7 +12,11 @@ export class ContactUsComponent implements OnInit {
   contactForm!: FormGroup;
   submitted = false;
 
-  constructor(private fb: FormBuilder) {}
+  sending = false;
+  error: string | null = null;
+  success: string | null = null;
+
+  constructor(private fb: FormBuilder, private contactSvc: ContactUsService) {}
 
   ngOnInit(): void {
     this.contactForm = this.fb.group({
@@ -27,12 +33,32 @@ export class ContactUsComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted = true;
+    this.error = null;
+    this.success = null;
 
     if (this.contactForm.invalid) return;
 
-    console.log('Message sent:', this.contactForm.value);
-    alert('Thank you for contacting us! We’ll get back to you soon. 💌');
-    this.contactForm.reset();
-    this.submitted = false;
+    const payload = {
+      name: (this.contactForm.value.name || '').trim(),
+      email: (this.contactForm.value.email || '').trim(),
+      phone: (this.contactForm.value.phone || '').trim() || null,
+      message: (this.contactForm.value.message || '').trim(),
+    };
+
+    this.sending = true;
+
+    this.contactSvc.sendMessage(payload)
+      .pipe(finalize(() => (this.sending = false)))
+      .subscribe({
+        next: () => {
+          this.success = 'Thank you for contacting us! We’ll get back to you soon. 💌';
+          this.contactForm.reset();
+          this.submitted = false;
+        },
+        error: (e) => {
+          console.error(e);
+          this.error = 'Failed to send message. Please try again in a moment.';
+        }
+      });
   }
 }

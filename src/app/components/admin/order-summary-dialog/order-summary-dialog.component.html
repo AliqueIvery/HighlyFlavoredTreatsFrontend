@@ -1,0 +1,202 @@
+<h2 mat-dialog-title class="os-titlebar">
+  <div class="os-title-left">
+    <div class="os-title">Order Summary</div>
+
+    <div class="os-sub" *ngIf="order as vm">
+        <span class="mono">#{{ vm.order.id }}</span>
+        <span class="dot">•</span>
+        <span>{{ formatDate(vm.order.createdAt) }}</span>
+    </div>
+
+  </div>
+
+  <button mat-icon-button (click)="close()" aria-label="Close">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content class="os-content">
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+  <div class="os-error" *ngIf="error">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <ng-container *ngIf="order && !loading">
+    <!-- KPI strip -->
+    <div class="os-kpis">
+      <div class="kpi">
+        <div class="kpi-label">Status</div>
+        <div class="kpi-value">
+          <span class="pill" [ngClass]="'pill-' + ((order.order.status || '') | lowercase)">
+            {{ order.order.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi-label">Fulfillment</div>
+        <div class="kpi-value">
+          <span class="pill pill-neutral">
+            {{ order.order.deliveryType || '—' }}
+          </span>
+          <span class="subtle" *ngIf="order.order.deliveryEligible === false">
+            (not eligible)
+          </span>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi-label">Total</div>
+        <div class="kpi-value strong">
+          {{ formatMoney(order.order.grandTotalCents) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="os-grid">
+      <!-- LEFT: Items table -->
+      <section class="os-card">
+        <div class="os-card-h">
+          <div class="os-card-title">Items</div>
+          <div class="os-card-sub">{{ order.items.length || 0 }} item(s)</div>
+        </div>
+
+        <div class="os-table-wrap" *ngIf="order.items.length; else noItems">
+          <table class="os-table">
+            <thead>
+              <tr>
+                <th class="col-item">Item</th>
+                <th class="col-price">Unit</th>
+                <th class="col-qty">Qty</th>
+                <th class="col-total">Line Total</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let it of order.items">
+                <td class="col-item">
+                  <div class="item-name">{{ it.productName }}</div>
+                  <div class="item-meta subtle">
+                    <span class="mono" *ngIf="it.productId">PID: {{ it.productId }}</span>
+                    <span *ngIf="it.id"> • </span>
+                    <span class="mono" *ngIf="it.id">Item: {{ it.id }}</span>
+                  </div>
+                </td>
+
+                <td class="col-price">{{ formatMoney(it.unitPriceCents) }}</td>
+                <td class="col-qty">x{{ it.quantity }}</td>
+                <td class="col-total strong">{{ formatMoney(it.lineTotalCents) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #noItems>
+          <div class="os-empty">
+            <mat-icon>shopping_bag</mat-icon>
+            <div>
+              <div class="strong">No items saved for this order.</div>
+              <div class="subtle">This usually means order items were not persisted during checkout.</div>
+            </div>
+          </div>
+        </ng-template>
+      </section>
+
+      <!-- RIGHT: Details -->
+      <section class="os-stack">
+        <!-- Customer -->
+        <div class="os-card">
+          <div class="os-card-h">
+            <div class="os-card-title">Customer</div>
+          </div>
+
+          <div class="os-rows">
+            <div class="row">
+              <span class="label">Name</span>
+              <span class="value">{{ order.order.customerName || '—' }}</span>
+            </div>
+            <div class="row">
+              <span class="label">Email</span>
+              <span class="value">{{ order.order.customerEmail || '—' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="os-card" *ngIf="order.order.addressLine1">
+          <div class="os-card-h">
+            <div class="os-card-title">Address</div>
+          </div>
+
+          <div class="addr">
+            <div>{{ order.order.addressLine1 }}</div>
+            <div class="subtle">
+              {{ order.order.city }}, {{ order.order.state }} {{ order.order.postalCode }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="os-card">
+          <div class="os-card-h">
+            <div class="os-card-title">Totals</div>
+          </div>
+
+          <div class="os-rows">
+            <div class="row">
+              <span class="label">Subtotal</span>
+              <span class="value">{{ formatMoney(order.order.subtotalCents) }}</span>
+            </div>
+
+            <div class="row" *ngIf="(order.order.shippingCents || 0) > 0">
+              <span class="label">Shipping</span>
+              <span class="value">{{ formatMoney(order.order.shippingCents) }}</span>
+            </div>
+
+            <div class="row" *ngIf="(order.order.taxCents || 0) > 0">
+              <span class="label">Tax</span>
+              <span class="value">{{ formatMoney(order.order.taxCents) }}</span>
+            </div>
+
+            <div class="row" *ngIf="(order.order.processingFeeCents || 0) > 0">
+              <span class="label">Processing Fee</span>
+              <span class="value">{{ formatMoney(order.order.processingFeeCents) }}</span>
+            </div>
+
+            <div class="row total">
+              <span class="label">Total</span>
+              <span class="value strong">{{ formatMoney(order.order.grandTotalCents) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meta -->
+        <div class="os-card">
+          <div class="os-card-h">
+            <div class="os-card-title">Meta</div>
+          </div>
+
+          <div class="os-rows">
+            <div class="row">
+              <span class="label">Delivery Eligible</span>
+              <span class="value">
+                {{ order.order.deliveryEligible === true ? 'Yes' : (order.order.deliveryEligible === false ? 'No' : '—') }}
+              </span>
+            </div>
+
+            <div class="row">
+              <span class="label">Tenant</span>
+              <span class="value mono">{{ order.order.tenantId || '—' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="os-actions">
+  <button mat-stroked-button (click)="close()">Close</button>
+</mat-dialog-actions>

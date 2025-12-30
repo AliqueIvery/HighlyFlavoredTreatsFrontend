@@ -42,7 +42,15 @@
       <div class="col status-col">Status</div>
     </div>
 
-    <div class="orders-row" *ngFor="let o of orders; trackBy: trackById">
+    <div
+      class="orders-row"
+      *ngFor="let o of orders; trackBy: trackById"
+      role="button"
+      tabindex="0"
+      (click)="openOrderSummary(o.id)"
+      (keydown.enter)="openOrderSummary(o.id)"
+      (keydown.space)="openOrderSummary(o.id)"
+    >
       <!-- ID + email -->
       <div class="col id-col">
         <div class="order-id">#{{ o.id }}</div>
@@ -110,7 +118,7 @@
       </div>
 
       <!-- Status -->
-      <div class="col status-col">
+      <div class="col status-col "(click)="$event.stopPropagation()">
         <div class="dropdown status-dropdown">
           <button
             class="btn btn-sm btn-outline-secondary dropdown-toggle"

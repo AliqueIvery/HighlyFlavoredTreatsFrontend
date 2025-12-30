@@ -37,6 +37,7 @@ import { OrderSuccessDialogComponent } from './components/order-success-dialog/o
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { TenantEmailSettingsComponent } from './components/admin/tenant-email-settings/tenant-email-settings.component';
 import { PaymentsSettingsComponent } from './components/admin/payments-settings/payments-settings.component';
+import { OrderSummaryDialogComponent } from './components/admin/order-summary-dialog/order-summary-dialog.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { PaymentsSettingsComponent } from './components/admin/payments-settings/
     OrderSuccessDialogComponent,
     AuthCallbackComponent,
     TenantEmailSettingsComponent,
-    PaymentsSettingsComponent
+    PaymentsSettingsComponent,
+    OrderSummaryDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -140,7 +142,16 @@ import { PaymentsSettingsComponent } from './components/admin/payments-settings/
 
           // 🔒 (Example) orders, if you want them protected
           {
-            uri: `${environment.apiBase}/api/orders*`,
+            uri: `${environment.apiBase}/api/orders`,
+            tokenOptions: {
+              authorizationParams: {
+                audience: environment.auth0.audience,
+                scope: 'openid profile email'
+              }
+            }
+          },
+          {
+            uri: `${environment.apiBase}/api/orders/*`,
             tokenOptions: {
               authorizationParams: {
                 audience: environment.auth0.audience,

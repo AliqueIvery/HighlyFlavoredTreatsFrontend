@@ -192,6 +192,12 @@
   min-width: 120px;
   text-align: left;
 }
+.orders-row {
+  cursor: pointer;
+}
+.orders-row:hover {
+  background: rgba(0,0,0,0.03);
+}
 
 
 /* Responsive: stack on narrow screens */

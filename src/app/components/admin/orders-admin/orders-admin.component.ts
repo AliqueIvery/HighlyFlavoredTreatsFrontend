@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Order, OrderStatus } from 'src/app/common/order';
 import { OrderService } from 'src/app/services/order.service';
+import { OrderSummaryDialogComponent } from '../order-summary-dialog/order-summary-dialog.component';
 
 @Component({
   selector: 'app-orders-admin',
@@ -24,7 +26,9 @@ export class OrdersAdminComponent implements OnInit {
     'CANCELLED'
   ];
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService,
+              private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -94,4 +98,11 @@ export class OrdersAdminComponent implements OnInit {
     return base;
   }
 
+  openOrderSummary(orderId: string | number) {
+    this.dialog.open(OrderSummaryDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: { orderId }
+    });
+  }
 }

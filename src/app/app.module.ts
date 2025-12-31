@@ -38,6 +38,7 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
 import { TenantEmailSettingsComponent } from './components/admin/tenant-email-settings/tenant-email-settings.component';
 import { PaymentsSettingsComponent } from './components/admin/payments-settings/payments-settings.component';
 import { OrderSummaryDialogComponent } from './components/admin/order-summary-dialog/order-summary-dialog.component';
+import { TenantInterceptor } from './interceptor/tenant.interceptor';
 
 @NgModule({
   declarations: [
@@ -176,7 +177,7 @@ import { OrderSummaryDialogComponent } from './components/admin/order-summary-di
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,
       multi: true
-    }],
+    },{ provide: HTTP_INTERCEPTORS, useClass: TenantInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

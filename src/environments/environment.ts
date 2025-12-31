@@ -9,5 +9,6 @@ export const environment = {
   S3_BASE_URL : 'https://store-saas-assets-prod.s3.amazonaws.com/',
   stripe: {
     publishableKey: 'pk_test_51KoGA8Faa5pgnsNZPeLgBUTW5wHGlDo3ekBHTgSYjhnJkMlaLyo005zQBwuK34LJC0M2OMPICEyZrrqjJJ2B7DmZ00Obow3Eat'
-  }
+  },
+  tenantId: 'tnt_hft001'
 };

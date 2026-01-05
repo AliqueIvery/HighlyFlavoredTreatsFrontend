@@ -14,13 +14,17 @@ export class DeliveryAreaComponent implements AfterViewInit {
 
   // if you want to bind cities list too:
   deliveryCities = [
-    "Atlanta, GA",
-    "Sandy Springs, GA",
-    "Marietta, GA",
-    "Smyrna, GA",
-    "Lawrenceville, GA",
-    "Decatur, GA"
+    "Dacula, GA",
+    "Auburn, GA",
+    "Buford, GA",
+    "Suwanee, GA",
+    "Duluth, GA",
+    "Norcross, GA",
+    "Lilburn, GA",
+    "Snellville, GA",
+    "Grayson, GA"
   ];
+
 
   private map!: L.Map;
 

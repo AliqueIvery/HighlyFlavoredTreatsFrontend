@@ -1,12 +1,12 @@
 // src/app/services/upload.service.ts
-import { HttpClient, HttpEvent } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-interface DirectUploadResponse {
+interface PresignResponse {
   key: string;
-  // url?: string;
+  url: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -15,10 +15,24 @@ export class UploadService {
 
   constructor(private http: HttpClient) {}
 
-  uploadImage(file: File): Observable<DirectUploadResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
+  async uploadImagePresigned(file: File): Promise<{ key: string }> {
+    // 1) Ask backend for presigned URL
+    const presign = await firstValueFrom(
+      this.http.post<PresignResponse>(`${this.baseUrl}/presign-image`, {
+        fileName: file.name,
+        contentType: file.type || 'application/octet-stream'
+      })
+    );
 
-    return this.http.post<DirectUploadResponse>(`${this.baseUrl}/image`, formData);
+    // 2) Upload file directly to S3
+    await firstValueFrom(
+      this.http.put(presign.url, file, {
+        headers: {
+          'Content-Type': file.type || 'application/octet-stream'
+        }
+      })
+    );
+
+    return { key: presign.key };
   }
 }

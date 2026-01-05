@@ -22,6 +22,9 @@ export class ProductAddComponent implements OnInit {
   selectedFile: File | null = null;
   uploadProgress = 0;
   imagePreviewUrl: string | null = null;
+  readonly MAX_IMAGE_MB = 10;
+  readonly MAX_IMAGE_BYTES = this.MAX_IMAGE_MB * 1024 * 1024;
+  readonly ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
   constructor(
     private fb: FormBuilder,
@@ -56,50 +59,57 @@ export class ProductAddComponent implements OnInit {
       return;
     }
 
-    this.selectedFile = input.files[0];
+    const file = input.files[0];
+
+    // ✅ size validation
+    if (file.size > this.MAX_IMAGE_BYTES) {
+      this.saveError = `Image is too large. Max size is ${(this.MAX_IMAGE_BYTES / (1024*1024)).toFixed(0)}MB.`;
+      input.value = '';
+      this.selectedFile = null;
+      this.imagePreviewUrl = null;
+      return;
+    }
+
+    this.saveError = null;
+    this.selectedFile = file;
 
     const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreviewUrl = reader.result as string;
-    };
-    reader.readAsDataURL(this.selectedFile);
+    reader.onload = () => (this.imagePreviewUrl = reader.result as string);
+    reader.readAsDataURL(file);
   }
 
-  submit(): void {
+  async submit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.saveError) return;
 
     this.saving = true;
     this.saveError = null;
 
     if (this.selectedFile) {
-      this.uploadAndCreate();
+      await this.uploadAndCreate();
     } else {
       this.createProduct();
     }
   }
 
-  private uploadAndCreate(): void {
+  private async uploadAndCreate(): Promise<void> {
     if (!this.selectedFile) {
       this.createProduct();
       return;
     }
 
-    this.uploadProgress = 0;
-
-    this.uploadService.uploadImage(this.selectedFile).subscribe({
-      next: res => {
-        this.form.patchValue({ imageKey: res.key });
-        this.createProduct();
-      },
-      error: err => {
-        console.error(err);
-        this.saveError = 'Image upload failed.';
-        this.saving = false;
-      }
-    });
+    try {
+      const res = await this.uploadService.uploadImagePresigned(this.selectedFile);
+      this.form.patchValue({ imageKey: res.key });
+      this.createProduct();
+    } catch (err) {
+      console.error(err);
+      this.saveError = 'Image upload failed.';
+      this.saving = false;
+    }
   }
 
   private createProduct(): void {

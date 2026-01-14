@@ -1,0 +1,114 @@
+/* src/app/components/about-us/about-us.component.css */
+/* About page styled to match your HERO CSS */
+
+.hero {
+  min-height: 70vh;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 2.5rem;
+  padding: 3.5rem clamp(1rem, 4vw, 4rem);
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 20, 147, .25), rgba(5, 5, 9, 0) 45%),
+    radial-gradient(circle at 85% 25%, rgba(13, 42, 255, 0.25), rgba(5, 5, 9, 0) 55%),
+    #050509;
+  align-items: center;
+}
+
+/* Optional: keep consistent page width if you want */
+.about-hero {
+  border-radius: 1.35rem;
+  overflow: hidden;
+  margin: 2rem auto;
+  max-width: 1200px;
+  border: 1px solid rgba(255, 255, 255, .05);
+}
+
+.hero-content h1 {
+  font-size: clamp(2.4rem, 4.2vw, 3.6rem);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.hero-content .sub {
+  max-width: 520px;
+  margin-bottom: 1.1rem;
+  opacity: .82;
+  line-height: 1.7;
+}
+
+/* Slight variety so it doesn't feel repetitive */
+.hero-content .sub-2 { opacity: .78; }
+.hero-content .sub-3 { opacity: .78; margin-bottom: 1.6rem; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .35em;
+  font-size: .65rem;
+  margin-bottom: .75rem;
+  color: rgba(255, 255, 255, .6);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons (match the hero vibe) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, .10);
+  background: rgba(255, 255, 255, .06);
+  color: inherit;
+  transition: transform .15s ease, background .15s ease, border-color .15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, .10);
+  border-color: rgba(255, 255, 255, .16);
+}
+
+.btn.primary {
+  background: rgba(255, 20, 147, .18);
+  border-color: rgba(255, 20, 147, .35);
+}
+
+.btn.primary:hover {
+  background: rgba(255, 20, 147, .24);
+  border-color: rgba(255, 20, 147, .50);
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+/* Image */
+.hero-image {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-image img {
+  max-width: 420px;
+  width: 100%;
+  height: auto;
+  border-radius: 1.35rem;
+  box-shadow: 0 28px 65px rgba(255, 20, 147, .3);
+  border: 1px solid rgba(255, 255, 255, .04);
+  background: rgba(0, 0, 0, .15);
+  padding: 1rem; /* makes logos look nicer than edge-to-edge */
+}
+
+/* RESPONSIVE (hero bits) */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; text-align: left; }
+  .hero-image img { max-width: 320px; }
+  .about-hero { margin: 1rem; }
+}

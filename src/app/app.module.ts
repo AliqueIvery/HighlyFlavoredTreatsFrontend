@@ -39,6 +39,7 @@ import { TenantEmailSettingsComponent } from './components/admin/tenant-email-se
 import { PaymentsSettingsComponent } from './components/admin/payments-settings/payments-settings.component';
 import { OrderSummaryDialogComponent } from './components/admin/order-summary-dialog/order-summary-dialog.component';
 import { TenantInterceptor } from './interceptor/tenant.interceptor';
+import { AboutUsComponent } from './components/about-us/about-us.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { TenantInterceptor } from './interceptor/tenant.interceptor';
     AuthCallbackComponent,
     TenantEmailSettingsComponent,
     PaymentsSettingsComponent,
-    OrderSummaryDialogComponent
+    OrderSummaryDialogComponent,
+    AboutUsComponent
   ],
   imports: [
     BrowserModule,

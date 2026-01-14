@@ -14,6 +14,8 @@ export class DeliveryAreaComponent implements AfterViewInit {
 
   // if you want to bind cities list too:
   deliveryCities = [
+    "Lawrenceville, GA",
+    "Sugarhill, GA",
     "Dacula, GA",
     "Auburn, GA",
     "Buford, GA",

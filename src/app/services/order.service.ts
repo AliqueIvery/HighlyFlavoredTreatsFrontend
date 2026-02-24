@@ -36,6 +36,7 @@ export interface OrderDetailsDto {
     deliveryEligible?: boolean;
 
     subtotalCents?: number;
+    tipAmountCents?: number;
     shippingCents?: number;
     taxCents?: number;
     processingFeeCents?: number;

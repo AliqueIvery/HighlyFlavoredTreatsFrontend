@@ -25,6 +25,7 @@ export interface Order {
   longitude?: number;
 
   subtotalCents: number;
+  tipAmountCents?: number | null;
   shippingCents: number;
   taxCents: number;
   grandTotalCents: number;

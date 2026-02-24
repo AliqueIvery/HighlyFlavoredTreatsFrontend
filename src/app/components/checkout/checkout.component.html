@@ -143,6 +143,27 @@
       </p>
     </ng-template>
 
+    <!-- Tip -->
+    <div class="section-header">
+      <h3>Tip (optional)</h3>
+      <p>Add a tip to support your baker.</p>
+    </div>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Tip Amount</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        step="0.01"
+        formControlName="tipAmount"
+        (input)="updateTipAmount(f['tipAmount'].value)"
+      />
+      <mat-error *ngIf="submitted && f['tipAmount'].invalid">
+        Tip cannot be negative
+      </mat-error>
+    </mat-form-field>
+
     <!-- Payment -->
     <div class="section-header">
       <h3>Payment Details</h3>
@@ -166,6 +187,10 @@
             <span>Subtotal</span>
             <span>{{ cart.subtotal() | currency }}</span>
           </div>
+          <div class="line" *ngIf="tipAmount > 0">
+            <span>Tip</span>
+            <span>{{ tipAmount | currency }}</span>
+          </div>
           <div class="line">
             <span>Processing fee</span>
             <span>{{ processingFee | currency }}</span>
@@ -174,7 +199,7 @@
             <span>Total</span>
             <strong>
               {{
-                cart.subtotal() + processingFee
+                cart.subtotal() + tipAmount + processingFee
                   | currency
               }}
             </strong>

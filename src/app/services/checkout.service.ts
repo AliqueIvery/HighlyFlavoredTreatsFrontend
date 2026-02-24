@@ -17,6 +17,7 @@ export interface CreateIntentRequest {
   state: string;
   postalCode: string;
   deliveryType: string;
+  tipAmount?: number;
   items: CheckoutItem[];
 }
 

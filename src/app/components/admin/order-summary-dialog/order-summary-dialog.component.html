@@ -150,6 +150,11 @@
               <span class="value">{{ formatMoney(order.order.subtotalCents) }}</span>
             </div>
 
+            <div class="row" *ngIf="(order.order.tipAmountCents || 0) > 0">
+              <span class="label">Tip</span>
+              <span class="value">{{ formatMoney(order.order.tipAmountCents) }}</span>
+            </div>
+
             <div class="row" *ngIf="(order.order.shippingCents || 0) > 0">
               <span class="label">Shipping</span>
               <span class="value">{{ formatMoney(order.order.shippingCents) }}</span>

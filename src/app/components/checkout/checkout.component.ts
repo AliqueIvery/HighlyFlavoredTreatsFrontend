@@ -3,12 +3,13 @@ import {
   Component,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   ViewChild,
   ElementRef
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { CartService } from 'src/app/services/cart.service';
 import { environment } from 'src/environments/environment';
 import { CheckoutService } from 'src/app/services/checkout.service';
@@ -22,7 +23,7 @@ import { CartItem } from 'src/app/common/cart-item';
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css']
 })
-export class CheckoutComponent implements OnInit, AfterViewInit {
+export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cardElement', { static: false })
   cardElement!: ElementRef<HTMLDivElement>;
 
@@ -35,6 +36,9 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
   loading = false;
   error: string | null = null;
+  tipAmount = 0;
+
+  private tipAmountSub?: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -54,8 +58,14 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
       city: ['', Validators.required],
       state: ['', Validators.required],
       postalCode: ['', Validators.required],
-      deliveryType: ['delivery', Validators.required]
+      deliveryType: ['delivery', Validators.required],
+      tipAmount: [0, [Validators.min(0)]]
     });
+
+    this.tipAmountSub = this.f['tipAmount'].valueChanges.subscribe((value) => {
+      this.tipAmount = this.normalizeTipAmount(value);
+    });
+    this.tipAmount = this.normalizeTipAmount(this.f['tipAmount'].value);
 
     // Pre-load Stripe (but we’ll also guard in setupCardElement)
     this.stripe = await loadStripe(environment.stripe.publishableKey);
@@ -67,6 +77,10 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.setupCardElement();
+  }
+
+  ngOnDestroy(): void {
+    this.tipAmountSub?.unsubscribe();
   }
 
   private async setupCardElement() {
@@ -132,13 +146,14 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
   // 🔥 Same fee model as backend: Stripe 2.9% + $0.30 + 7% platform
   get processingFee(): number {
-    if (!this.subtotal) return 0;
+    const chargeBase = this.subtotal + this.tipAmount;
+    if (!chargeBase) return 0;
 
     const STRIPE_PERCENT = 0.029;
     const PLATFORM_PERCENT = 0.07;
     const FIXED_FEE_CENTS = 30;
 
-    const S = Math.round(this.subtotal * 100); // subtotal in cents
+    const S = Math.round(chargeBase * 100); // subtotal + tip in cents
 
     const gross = (S + FIXED_FEE_CENTS) / (1 - STRIPE_PERCENT - PLATFORM_PERCENT);
     const feeCents = Math.round(gross - S);
@@ -147,7 +162,17 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   }
 
   get totalWithFees(): number {
-    return this.subtotal + this.processingFee;
+    return this.subtotal + this.tipAmount + this.processingFee;
+  }
+
+  updateTipAmount(raw: unknown): void {
+    this.tipAmount = this.normalizeTipAmount(raw);
+  }
+
+  private normalizeTipAmount(raw: unknown): number {
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed) || parsed <= 0) return 0;
+    return Math.round(parsed * 100) / 100;
   }
 
   async onSubmit(): Promise<void> {
@@ -170,6 +195,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
     try {
       const formValue = this.checkoutForm.value;
+      this.tipAmount = this.normalizeTipAmount(formValue.tipAmount);
 
       const checkoutBody = {
         firstName: formValue.firstName,
@@ -181,6 +207,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         state: formValue.state,
         postalCode: formValue.postalCode,
         deliveryType: formValue.deliveryType,
+        tipAmount: this.tipAmount,
         items: cartItems.map(ci => ({
           productId: ci.product.id,
           quantity: ci.quantity
@@ -225,7 +252,8 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
         // Clear cart + reset form
         this.cart.clear();
-        this.checkoutForm.reset({ deliveryType: 'delivery' });
+        this.tipAmount = 0;
+        this.checkoutForm.reset({ deliveryType: 'delivery', tipAmount: 0 });
         this.submitted = false;
 
         // Open success dialog

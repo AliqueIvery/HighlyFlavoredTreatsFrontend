@@ -221,6 +221,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const clientSecret = res?.clientSecret;
       const orderId = (res as any)?.orderId;
+      const orderIdNumber = Number(orderId);
       console.log('Created order:', orderId);
 
       if (!clientSecret) {
@@ -247,6 +248,22 @@ export class CheckoutComponent implements OnInit, AfterViewInit, OnDestroy {
         console.error(error);
         this.error = error.message || 'Payment failed.';
       } else if (paymentIntent?.status === 'succeeded') {
+        if (paymentIntent.id && Number.isInteger(orderIdNumber)) {
+          try {
+            await firstValueFrom(
+              this.checkoutService.confirmPayment({
+                orderId: orderIdNumber,
+                paymentIntentId: paymentIntent.id
+              })
+            );
+          } catch (confirmError) {
+            // Payment is already complete at Stripe; keep checkout success UX intact.
+            console.error('Payment succeeded but backend confirmation failed.', confirmError);
+          }
+        } else {
+          console.warn('Skipped backend payment confirmation due to missing orderId or paymentIntentId.');
+        }
+
         // Use totalWithFees to show what customer actually paid
         const finalTotal = this.totalWithFees;
 

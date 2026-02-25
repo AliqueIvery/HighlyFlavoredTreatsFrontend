@@ -26,6 +26,18 @@ export interface CreateIntentResponse {
   orderId?: string;
 }
 
+export interface ConfirmPaymentRequest {
+  orderId: number;
+  paymentIntentId: string;
+}
+
+export interface ConfirmPaymentResponse {
+  orderId: string;
+  status: string;
+  alreadyPaid: boolean;
+  emailsSent: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,6 +49,13 @@ export class CheckoutService {
   createPaymentIntent(body: CreateIntentRequest) {
     return this.http.post<CreateIntentResponse>(
       `${environment.apiBase}/api/payments/create-intent`,
+      body
+    );
+  }
+
+  confirmPayment(body: ConfirmPaymentRequest) {
+    return this.http.post<ConfirmPaymentResponse>(
+      `${environment.apiBase}/api/payments/confirm`,
       body
     );
   }
